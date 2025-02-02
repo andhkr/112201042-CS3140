@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-
-const long long  prime_base = 31;
-const long long  M          = 1e9 + 7;
-
+#include "include/symbol_table.h"
 
 bool is_prime(long n){
     /*skipping the multiple of 2 and 3*/
@@ -33,6 +26,10 @@ int size_of_table(int expected_keys_count){
 }
 
 int hashvalue_of_key(char* key){
+    /* prime base and */
+    long long  prime_base = 17000069;
+    long long  M          = 1e9 + 7;
+
     int hash = 0;
     for(char* c = key;*c != '\0';++c){
         hash = ((hash*prime_base)%M + *c)%M;
@@ -40,6 +37,88 @@ int hashvalue_of_key(char* key){
     return hash;
 }
 
-int main(){
-    printf("prime %d\n %lld,%lld\n %d\n",size_of_table(64),prime_base,M,hashvalue_of_key("Radha"));
+void* safe_alloc(size_t nmemb,size_t size){
+    void* ptr = calloc(nmemb,size);
+    if(ptr == NULL){
+        perror("Memory Allocation Failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return ptr;
+}
+
+symbltblentry* create_node(char* name,datatype type,datavalue value){
+    symbltblentry* node = safe_alloc(1,sizeof(symbltblentry));
+    node->name          = name;
+    node->type          = type;
+    node->value         = value;
+    node->next          = NULL;
+    return node;
+}
+
+void init_entry(symbltblentry* entry,char* name,datatype type,datavalue value){
+    entry->name = name;
+    entry->type = type;
+    entry->value = value;
+    entry->next = NULL;
+}
+
+bool is_entryequal(symbltblentry* entry1,symbltblentry* entry2){
+    return strcmp(entry1->name,entry2->name)==0 && (entry1->type == entry2->type);
+}
+
+symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id){
+    symbol_table* symbtbl = safe_alloc(1,sizeof(symbol_table));
+    int capacity = size_of_table(size);
+    symbltblentry* table = safe_alloc(capacity,sizeof(symbltblentry));
+    symbtbl->capacity = capacity;
+    symbtbl->hashvalue_of_key = hashvalue_of_key;
+    symbtbl->table = table;
+    symbtbl->id = id;
+    return symbtbl;
+}
+
+void add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value){
+    int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
+    if(symbtbl->table[hashvalue].name==NULL){
+        init_entry(&symbtbl->table[hashvalue],name,type,value);
+    }else{
+        symbltblentry* curr = &symbtbl->table[hashvalue];
+        symbltblentry* new_entry = create_node(name,type,value);
+        symbltblentry* prev = NULL;
+        while(curr){
+            if(!is_entryequal(curr,new_entry)){
+                prev = curr;
+                curr = curr->next;
+            }else{
+                fprintf(stderr,"Error:Redeclaration of Variable %s\n",name);
+                exit(EXIT_FAILURE);
+            }
+        }
+        prev->next = new_entry;
+    }
+}
+
+symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type){
+    int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
+    if(symbtbl->table[hashvalue].name==NULL){
+        fprintf(stderr,"Error: Variable %s not declared\n",name);
+        exit(EXIT_FAILURE);
+    }else{
+        symbltblentry* curr = &symbtbl->table[hashvalue];
+        symbltblentry* prev = NULL;
+        while(curr){
+            if(strcmp(curr->name,name) != 0 || curr->type != type){
+                prev = curr;
+                curr = curr->next;
+            }else{
+                break;
+            }
+        }
+        if(curr){
+            return curr;
+        }else{
+            fprintf(stderr,"Error: Variable %s not declared\n",name);
+            exit(EXIT_FAILURE);
+        }
+    }
 }
