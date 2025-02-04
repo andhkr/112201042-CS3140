@@ -1,10 +1,10 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 /*helper function for hashing*/
 bool is_prime(long n);
@@ -23,7 +23,10 @@ typedef enum{
     DOUBLE,
     FLOAT,
     FUNCPTR,
-    ARRAY
+    ARRAY,
+    ENTRY,
+    OP,
+    STATEMENT,
 }datatype;
 
 typedef union{
@@ -56,11 +59,15 @@ typedef struct symbol_table{
     symbltblentry* table;
     int capacity;
     int id;
-} symbol_table;
+}symbol_table;
+
+extern symbol_table* symbtbl;
 
 symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id);
 
-void add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value);
+symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value);
 
 symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type);
+
+void print_symbol_table();
 #endif

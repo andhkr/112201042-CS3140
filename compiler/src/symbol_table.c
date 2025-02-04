@@ -1,5 +1,7 @@
 #include "include/symbol_table.h"
 
+symbol_table* symbtbl = NULL;
+
 bool is_prime(long n){
     /*skipping the multiple of 2 and 3*/
     if(n %2 == 0 || n%3 == 0) return false;
@@ -77,11 +79,20 @@ symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id){
     return symbtbl;
 }
 
-void add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value){
+symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value){
     int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
+    // printf("%s\n",name);
+    // printf("%d\n",symbtbl->capacity);
+    // printf("%d\n",hashvalue);
     if(symbtbl->table[hashvalue].name==NULL){
         init_entry(&symbtbl->table[hashvalue],name,type,value);
+        // printf("entry: %s\n", symbtbl->table[hashvalue].name);
+        // if(strcmp("c",name) == 0){
+        //     printf("che %s -- %s -- %s\n",symbtbl->table[97].name,symbtbl->table[98].name,symbtbl->table[99].name);
+        // }
+        return &symbtbl->table[hashvalue];
     }else{
+        // printf("dfg %s\n",name);
         symbltblentry* curr = &symbtbl->table[hashvalue];
         symbltblentry* new_entry = create_node(name,type,value);
         symbltblentry* prev = NULL;
@@ -95,20 +106,23 @@ void add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value){
             }
         }
         prev->next = new_entry;
+        return new_entry;
     }
+    return NULL;
 }
 
 symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type){
     int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
-    if(symbtbl->table[hashvalue].name==NULL){
+    // printf("%s\n",name);
+    // printf("%d\n",symbtbl->capacity);
+    // printf("name:  %s\n",symbtbl->table[hashvalue].name);
+    if((symbtbl->table[hashvalue].name)==NULL){
         fprintf(stderr,"Error: Variable %s not declared\n",name);
         exit(EXIT_FAILURE);
     }else{
         symbltblentry* curr = &symbtbl->table[hashvalue];
-        symbltblentry* prev = NULL;
         while(curr){
             if(strcmp(curr->name,name) != 0 || curr->type != type){
-                prev = curr;
                 curr = curr->next;
             }else{
                 break;
