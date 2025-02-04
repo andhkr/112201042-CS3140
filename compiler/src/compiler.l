@@ -29,29 +29,21 @@ letter	[a-zA-Z]
 
 %%
 write			{
-					nodevalue v2;
-					v2.statement = "write";
-					node* write = create_node_ast(STATEMENT,v2,0);
+					node* write = create_node_ast("write",0,NULL);
 					yylval.treeNode = write;
 					return WRITE;
 				}	
-integer			{
-					nodevalue v;
-					v.statement = "integer";
-					yylval.treeNode = create_node_ast(STATEMENT,v,0);
+integer			{;
+					yylval.treeNode = create_node_ast("integer",0,NULL);
 					return T_INT;	
 				}		
 begindecl		{
 					wflag = 1;
-					nodevalue v;
-					v.statement = "DECL";
-					yylval.treeNode = create_node_ast(STATEMENT,v,0);
+					yylval.treeNode = create_node_ast("DECL",0,NULL);
 					return DECL;
 				}
 enddecl			{
-					nodevalue v;
-					v.statement = "";
-					yylval.treeNode = create_node_ast(STATEMENT,v,0);
+					yylval.treeNode = create_node_ast("",0,NULL);
 					wflag = 0;
 					return ENDDECL;
 				}
@@ -66,14 +58,10 @@ enddecl			{
 									datavalue v;
 									v.integer= 0;
 									symbltblentry* entr = add_entry(manager.array[0],strdup(yytext),INT,v);
-									nodevalue v1;
-						            v1.entry = entr;
-									yylval.treeNode = create_node_ast(ENTRY,v1,0);
+									yylval.entry = entr;
 								}else{
 									symbltblentry* entr = get_entry(manager.array[0],strdup(yytext),INT);
-									nodevalue v1;
-						            v1.entry = entr;
-									yylval.treeNode = create_node_ast(ENTRY,v1,entr->value.integer);
+									yylval.entry = entr;
 								}
 								return VAR;
 							}

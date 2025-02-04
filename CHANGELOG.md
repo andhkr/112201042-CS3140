@@ -6,4 +6,4 @@ calculator done
 # week 4
 symbol table
 # week 5
-assignment 2 completed in which i am printing the preorder traversal of abstract syntax tree
+assignment 2 completed in which i have printed the AST(abstract syntax tree )and its preorder traversal and at last of parsing symbol table.

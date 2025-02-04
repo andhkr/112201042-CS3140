@@ -20,6 +20,7 @@
 	#include "include/ast.h"
 	#include "include/symbtbl_manager.h"
 	#include <assert.h>
+	#include <string.h>
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
@@ -33,7 +34,8 @@
 }
 
 %token <treeNode> WRITE
-%token <treeNode> DECL ENDDECL T_INT VAR
+%token <treeNode> DECL ENDDECL T_INT
+%token <entry> VAR
 %token <var> NUM
 
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
@@ -54,15 +56,15 @@
 						$2->right = NULL;
 						// // print_ast($$);/*declarative syntax tree will be printed*/
 						// printf("4 %s ",$1->value.statement);
-						print_ast($1);
+						print_decl($1);
 						printf("\n");
 						}
 		;
 		
 	Gdecl_list: 
 		| 	Gdecl Gdecl_list { 
-		$$ = $1;
-		}
+								$$ = $1;
+							}
 		;
 		
 	Gdecl 	:	ret_type Glist ';'  {
@@ -84,7 +86,7 @@
 		;
 	
 	Gid	:	VAR		{ 
-						$$ = $1;
+						$$ = create_node_ast($1->name,$1->value.integer,$1);
 					}
 		|	Gid '[' NUM ']'	{}
 
@@ -95,15 +97,24 @@
 		|	error ';' 		{fprintf(stderr,"Error : Syntax Error\n");}
 		;
 
-	statement:	assign_stmt  ';' { print_ast($1); printf("\n")/*print asignment syntax tree*/;}
+	statement:	assign_stmt  ';' { /*print asignment syntax tree*/
+									printf("AST:\n");
+									printtree($1); printf("\n\n");
+									printf("Preorder of AST:\n");
+									print_ast($1); printf("\n\n");
+									
+								}
 		|	write_stmt ';'		 {/*print asignment syntax tree*/
-									print_ast($1);printf("\n");}
+									printf("AST:\n\n");
+									printtree($1); printf("\n\n");
+									printf("Preorder of AST:\n");
+									print_ast($1); printf("\n\n");
+									
+								}
 		;
 
 	write_stmt:	WRITE '(' expr ')' 	{
-										nodevalue v1;
-										v1.statement = "CALL";
-										node* call = create_node_ast(STATEMENT,v1,$3->exp_value);
+										node* call = create_node_ast("CALL",$3->exp_value,NULL);
 										call->right = $3;
 										call->left  = $1;
 										$$=call;
@@ -112,12 +123,9 @@
 		 | WRITE '(''"' str_expr '"'')'      { /*unable to understand*/;}
 		;
 	
-	assign_stmt:	var_expr '=' expr  	{ 	
-											nodevalue v1;
-											v1.op = '=';				
-											node* asgn = create_node_ast(OP,v1,0);
-											$1->value.entry->value.integer = $3->exp_value;
-											$1->exp_value = $3->exp_value;
+	assign_stmt:	var_expr '=' expr  	{ 				
+											node* asgn = create_node_ast("ASSIGN",0,NULL);
+											$1->entry->value.integer = $3->exp_value;
 											asgn->left = $1;
 											asgn->right = $3;
 											asgn->exp_value = $3->exp_value;
@@ -126,64 +134,50 @@
 		;
 
 	expr	:	NUM 		{
-								nodevalue v;
-								v.num = $1;
-								$$ = create_node_ast(INT,v,$1);
+								$$ = create_node_ast("NUM",$1,NULL);
 							}
 		|	'-' NUM			{
-								nodevalue v1;
-								v1.op = '-';
-								nodevalue v2;
-								v2.num = -$2;
-								node* neg = create_node_ast(OP,v1,-$2);
-								neg->right = create_node_ast(INT,v2,-$2);
+								node* neg = create_node_ast("UNARYMINUS",-$2,NULL);
+								neg->right = create_node_ast("NUM",-$2,NULL);
 								$$ = neg;
 							}
 		|	var_expr		{$$ = $1;}
 		|	'(' expr ')'		{$$ = $2;}
 
 		|	expr '+' expr 		{ 
-									nodevalue v1;
-									v1.op = '+';
-									node* op = create_node_ast(OP,v1,($1->exp_value + $3->exp_value));
+									node* op = create_node_ast("PLUS",($1->exp_value + $3->exp_value),NULL);
 									op->left = $1;
 									op->right = $3;
 									$$ = op;
 								}
 		|	expr '-' expr	 	{
-									nodevalue v1;
-									v1.op = '-';
-									node* op = create_node_ast(OP,v1,($1->exp_value - $3->exp_value));
+									node* op = create_node_ast("SUB",($1->exp_value - $3->exp_value),NULL);
 									op->left = $1;
 									op->right = $3;
 									$$ = op;
 		 						}
 		|	expr '*' expr 		{
-									nodevalue v1;
-									v1.op = '*';
-									node* op = create_node_ast(OP,v1,($1->exp_value * $3->exp_value));
+									node* op = create_node_ast("MUL",($1->exp_value * $3->exp_value),NULL);
 									op->left = $1;
 									op->right = $3;
 									$$ = op;
 		 						}
 		|	expr '/' expr 		{ 	
 									assert($3->exp_value != 0);
-									nodevalue v1;
-									v1.op = '/';
-									node* op = create_node_ast(OP,v1,($1->exp_value / $3->exp_value));
+									node* op = create_node_ast("DIV",($1->exp_value / $3->exp_value),NULL);
 									op->left = $1;
 									op->right = $3;
 									$$ = op;
 								}
 
 		;
-	str_expr :  VAR {			$$ = $1;
+	str_expr :  VAR {			$$ = create_node_ast($1->name,$1->value.integer,$1);
 								
 								}
                   | str_expr VAR   { ;}
                 ;
 	
-	var_expr:	VAR	{			$$ = $1;}
+	var_expr:	VAR	{			$$ = create_node_ast($1->name,$1->value.integer,$1);}
 		|	var_expr '[' expr ']'	{            ;                                    }
 		;
 %%

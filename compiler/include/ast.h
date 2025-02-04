@@ -3,17 +3,10 @@
 
 #include "symbol_table.h"
 
-typedef union{
-    symbltblentry* entry;
-    char op;
-    char* statement;
-    int num;
-}nodevalue;
-
 
 typedef struct node{
-    datatype type;
-    nodevalue value;
+    char* statement;
+    symbltblentry* entry;
     struct node* left;
     struct node* right;
     int    exp_value;
@@ -21,7 +14,13 @@ typedef struct node{
 
 void* safe_malloc(size_t size);
 
-node* create_node_ast(datatype type,nodevalue value,int exp_value);
+node* create_node_ast(char* statement,int exp_value,symbltblentry* entry);
 
 void print_ast(node* root);
+
+void printtree(node* root);
+
+void print_decl(node* root);
+
+int depth(node* root);
 #endif
