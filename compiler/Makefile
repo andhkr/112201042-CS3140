@@ -10,7 +10,7 @@ cfiles = $(wildcard $(SRC)/*.c)
 cfiles += $(SRC)/y.tab.c $(SRC)/lex.yy.c
 objs  = $(cfiles:.c=.o)
 
-all : $(BIN)/basic
+all : $(BIN)/compiler
 
 $(SRC)/y.tab.c $(SRC)/y.tab.h : $(yaccfile)
 	yacc -d -o $(SRC)/y.tab.c $<
@@ -21,7 +21,7 @@ $(SRC)/lex.yy.c : $(lexfile) $(SRC)/y.tab.h
 $(SRC)/%.o : $(SRC)/%.c 
 	gcc $(CFLAGS) -c $< -o $@
 
-$(BIN)/basic:$(objs)
+$(BIN)/compiler:$(objs)
 	gcc -o $@ $^ -lm
 
 clean:
