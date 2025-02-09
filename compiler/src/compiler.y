@@ -58,6 +58,7 @@
 						// printf("4 %s ",$1->value.statement);
 						print_decl($1);
 						printf("\n");
+						printf("========================================================================================\n");
 						}
 		;
 		
@@ -99,16 +100,18 @@
 
 	statement:	assign_stmt  ';' { /*print asignment syntax tree*/
 									printf("AST:\n");
-									printtree($1); printf("\n\n");
+									printtree($1); printf("\n");
 									printf("Preorder of AST:\n");
 									print_ast($1); printf("\n\n");
+									printf("========================================================================================\n");
 									
 								}
 		|	write_stmt ';'		 {/*print asignment syntax tree*/
-									printf("AST:\n\n");
-									printtree($1); printf("\n\n");
+									printf("AST:\n");
+									printtree($1); printf("\n");
 									printf("Preorder of AST:\n");
 									print_ast($1); printf("\n\n");
+									printf("========================================================================================\n");
 									
 								}
 		;

@@ -73,8 +73,6 @@ void printtree(node* root){
             pads = 3 + (6*((pow(2,level-1))-1));}
         else if (level-1 == 0){pads = 3;}
         else {pads = 0;}
-
-        // printf("%d\n",pads);
         padding(pads);
         for(int i = 0;i<n;++i){
             node* trnode =  popfront(&q);
@@ -98,6 +96,7 @@ void printtree(node* root){
         }
         printf("\n");
     }
+    printf("--------------------------------------------------------------------------------------\n");
 }
 
 void print_name(char* name){
@@ -120,6 +119,7 @@ void print_decl(node* root){
     }
     printf("\n");
 }
+
 int depth(node* root){
     if(root == NULL) return 0;
     int d1 = depth(root->left);

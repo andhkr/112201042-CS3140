@@ -10,12 +10,14 @@ void init_symbtbl_manager(symbtbl_manager* manager){
 }
 
 void allocation(symbtbl_manager* manager){
+    size_t old_size = manager->capacity;
     manager->capacity = (manager->capacity)<<1;
     symbol_table** ptr = (symbol_table**) realloc(manager->array,manager->capacity);
     if(ptr == NULL){
         fprintf(stderr,"Memory reallocation for symbol table manager Failed\n");
         exit(EXIT_FAILURE);
     }
+    memset((char*)ptr+old_size,0,manager->capacity-old_size);
     manager->array = ptr;
 }
 
@@ -36,9 +38,10 @@ symbol_table* pop_back(symbtbl_manager* manager){
 
 void print_symbol_table(){
     symbol_table* curr = manager.array[0];
+	printf("Symbol Table:\n");
     for(int i = 0;i<curr->capacity;++i){
         if(curr->table[i].name != NULL){
-            printf("%d\n",curr->table[i].value.integer);
+            printf("%s := %d\n",curr->table[i].name,curr->table[i].value.integer);
         }
     }
 }
