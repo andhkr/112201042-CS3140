@@ -25,18 +25,21 @@
 	void yyerror( char* );
 	extern FILE* yyin;
 	extern int wflag;
+	#include <stdbool.h>
 %}
 
 %union{
 	int var;
+	bool b_var;
 	node*  treeNode;
 	symbltblentry* entry;
 }
 
 %token <treeNode> WRITE
-%token <treeNode> DECL ENDDECL T_INT
+%token <treeNode> DECL ENDDECL T_INT T_BOOL
 %token <entry> VAR
-%token <var> NUM
+%token <var> NUM 
+%token <b_var> b_NUM
 
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
 %type <treeNode> ret_type Gid var_expr str_expr Glist
@@ -54,16 +57,22 @@
 						$1->left = $2;
 						$1->right = $2->right;
 						$2->right = NULL;
-						// // print_ast($$);/*declarative syntax tree will be printed*/
-						// printf("4 %s ",$1->value.statement);
+
 						print_decl($1);
 						printf("\n");
 						printf("========================================================================================\n");
 						}
 		;
 		
-	Gdecl_list: 
+	Gdecl_list:              {$$ = NULL;}
 		| 	Gdecl Gdecl_list { 
+								node* curr = $1->right;
+								node* prev = curr;
+								while(curr){
+									prev = curr;
+									curr = curr->right;
+								}
+								prev->right = $2;
 								$$ = $1;
 							}
 		;
@@ -75,9 +84,9 @@
 									}
 		;
 		
-	ret_type:	T_INT		{
-								$$ = $1;
-							}
+	ret_type:	T_INT   | T_BOOL	{
+										$$ = $1;
+									}
 		;
 		
 	Glist 	:	Gid       {$$ = $1;}
@@ -87,7 +96,7 @@
 		;
 	
 	Gid	:	VAR		{ 
-						$$ = create_node_ast($1->name,$1->value.integer,$1);
+						$$ = create_node_ast($1->name,0,$1);
 					}
 		|	Gid '[' NUM ']'	{}
 
@@ -138,6 +147,9 @@
 
 	expr	:	NUM 		{
 								$$ = create_node_ast("NUM",$1,NULL);
+							}
+		|   	b_NUM 			{
+								$$ = create_node_ast("boolean",$1,NULL);
 							}
 		|	'-' NUM			{
 								node* neg = create_node_ast("UNARYMINUS",-$2,NULL);

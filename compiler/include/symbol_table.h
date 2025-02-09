@@ -27,7 +27,10 @@ typedef enum{
     ENTRY,
     OP,
     STATEMENT,
+    BOOL
 }datatype;
+
+extern datatype curr_datatype;
 
 typedef union{
     int integer;
@@ -37,6 +40,7 @@ typedef union{
     float  sdecimal;
     void* (*funcptr) (void);
     void* array;
+    bool BOOL;
 }datavalue;
 
 /* symbol table entry specifications and member functions*/
@@ -67,7 +71,7 @@ symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id);
 
 symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value);
 
-symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type);
+symbltblentry* get_entry(symbol_table* symbtbl,char* name);
 
 void print_symbol_table();
 #endif

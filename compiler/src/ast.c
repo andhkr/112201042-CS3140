@@ -116,6 +116,13 @@ void print_decl(node* root){
     while(root){
         printf("%s  ",root->statement);
         root = root->right;
+        if(root && root->entry == NULL){
+            printf("\n");
+            printf("--------------------------------------------------------------------------------------\n");
+            printf("                DECL\n");
+            printf("    %s                ",root->statement);
+            root = root->right;
+        }
     }
     printf("\n");
 }

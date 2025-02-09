@@ -1,6 +1,7 @@
 #include "include/symbol_table.h"
 
 symbol_table* symbtbl = NULL;
+datatype curr_datatype = 10;
 
 bool is_prime(long n){
     /*skipping the multiple of 2 and 3*/
@@ -92,7 +93,12 @@ symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalu
             if(!is_entryequal(curr,new_entry)){
                 prev = curr;
                 curr = curr->next;
-            }else{
+            }
+            else if (curr->name == name){
+                fprintf(stderr,"Error: confilicting types for %s",curr->name);
+                exit(EXIT_FAILURE);
+            }
+            else{
                 fprintf(stderr,"Error:Redeclaration of Variable %s\n",name);
                 exit(EXIT_FAILURE);
             }
@@ -103,7 +109,7 @@ symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalu
     return NULL;
 }
 
-symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type){
+symbltblentry* get_entry(symbol_table* symbtbl,char* name){
     int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
     if((symbtbl->table[hashvalue].name)==NULL){
         fprintf(stderr,"Error: Variable %s not declared\n",name);
@@ -111,7 +117,7 @@ symbltblentry* get_entry(symbol_table* symbtbl,char* name,datatype type){
     }else{
         symbltblentry* curr = &symbtbl->table[hashvalue];
         while(curr){
-            if(strcmp(curr->name,name) != 0 || curr->type != type){
+            if(strcmp(curr->name,name) != 0){
                 curr = curr->next;
             }else{
                 break;

@@ -21,6 +21,7 @@ int     wflag;
 #include "include/ast.h"
 #include "include/symbtbl_manager.h"
 #include "y.tab.h"
+#include <stdbool.h>
 %}
 
 %option noyywrap
@@ -34,9 +35,17 @@ write			{
 					return WRITE;
 				}	
 integer			{;
+					curr_datatype = INT;
 					yylval.treeNode = create_node_ast("integer",0,NULL);
 					return T_INT;	
 				}		
+
+bool			{;
+					curr_datatype = BOOL;
+					yylval.treeNode = create_node_ast("bool",0,NULL);
+					return T_BOOL;	
+				}
+
 begindecl		{
 					wflag = 1;
 					yylval.treeNode = create_node_ast("DECL",0,NULL);
@@ -53,14 +62,20 @@ enddecl			{
 					return NUM;
 				}
 
+True           {	yylval.b_var = 1;
+					return b_NUM;
+				}
+False           {	yylval.b_var = 0;
+					return b_NUM;
+				}
 {letter}({letter}|{digit})*	{
 								if(wflag == 1){
 									datavalue v;
 									v.integer= 0;
-									symbltblentry* entr = add_entry(manager.array[0],strdup(yytext),INT,v);
+									symbltblentry* entr = add_entry(manager.array[0],strdup(yytext),curr_datatype,v);
 									yylval.entry = entr;
 								}else{
-									symbltblentry* entr = get_entry(manager.array[0],strdup(yytext),INT);
+									symbltblentry* entr = get_entry(manager.array[0],strdup(yytext));
 									yylval.entry = entr;
 								}
 								return VAR;

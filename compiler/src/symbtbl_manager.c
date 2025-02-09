@@ -36,12 +36,22 @@ symbol_table* pop_back(symbtbl_manager* manager){
     return manager->array[--(manager->size)];
 }
 
+char* enum_to_type []={
+    [INT] "int",
+    [CHAR] "char",
+    [STRING] "char*",
+    [DOUBLE] "double",
+    [BOOL]   "bool"
+};
+
 void print_symbol_table(){
     symbol_table* curr = manager.array[0];
 	printf("Symbol Table:\n");
+    printf("%-10s %-10s %-10s\n","variable","type","value");
+    printf("-------------------------------------------\n");
     for(int i = 0;i<curr->capacity;++i){
         if(curr->table[i].name != NULL){
-            printf("%s := %d\n",curr->table[i].name,curr->table[i].value.integer);
+            printf("%-10s %-10s %-10d\n",curr->table[i].name,enum_to_type[curr->table[i].type],(curr->table[i].type == BOOL)?(curr->table[i].value.BOOL):(curr->table[i].value.integer));
         }
     }
 }
