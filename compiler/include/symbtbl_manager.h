@@ -19,4 +19,16 @@ void allocation(symbtbl_manager* manager);
 void push_back(symbtbl_manager* manager,symbol_table* symbtbl);
 
 symbol_table* pop_back(symbtbl_manager* manager);
+
+void print_symbol_table();
+
+void print_link_list(symbltblentry* head);
+
+void print_entry(symbltblentry* entry);
+
+void table_format();
+
+void free_symbol_table(symbol_table* symbtbl);
+
+void free_link_list(symbltblentry* head);
 #endif

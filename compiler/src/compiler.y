@@ -35,7 +35,7 @@
 	symbltblentry* entry;
 }
 
-%token <treeNode> WRITE
+%token <treeNode> WRITE 
 %token <treeNode> DECL ENDDECL T_INT T_BOOL
 %token <entry> VAR
 %token <var> NUM 
@@ -57,10 +57,7 @@
 						$1->left = $2;
 						$1->right = $2->right;
 						$2->right = NULL;
-
 						print_decl($1);
-						printf("\n");
-						printf("========================================================================================\n");
 						}
 		;
 		
@@ -96,7 +93,7 @@
 		;
 	
 	Gid	:	VAR		{ 
-						$$ = create_node_ast($1->name,0,$1);
+						$$ = create_node_ast('v',$1,NULL,NULL);
 					}
 		|	Gid '[' NUM ']'	{}
 
@@ -108,92 +105,73 @@
 		;
 
 	statement:	assign_stmt  ';' { /*print asignment syntax tree*/
-									printf("AST:\n");
-									printtree($1); printf("\n");
-									printf("Preorder of AST:\n");
-									print_ast($1); printf("\n\n");
-									printf("========================================================================================\n");
+									graph($1);
 									
 								}
 		|	write_stmt ';'		 {/*print asignment syntax tree*/
-									printf("AST:\n");
-									printtree($1); printf("\n");
-									printf("Preorder of AST:\n");
-									print_ast($1); printf("\n\n");
-									printf("========================================================================================\n");
-									
+									graph($1);
 								}
 		;
 
 	write_stmt:	WRITE '(' expr ')' 	{
-										node* call = create_node_ast("CALL",$3->exp_value,NULL);
-										call->right = $3;
-										call->left  = $1;
-										$$=call;
-	
+										$$ = create_node_ast('c',NULL,$1,$3);
 									}
 		 | WRITE '(''"' str_expr '"'')'      { /*unable to understand*/;}
 		;
 	
-	assign_stmt:	var_expr '=' expr  	{ 				
-											node* asgn = create_node_ast("ASSIGN",0,NULL);
-											$1->entry->value.integer = $3->exp_value;
-											asgn->left = $1;
-											asgn->right = $3;
-											asgn->exp_value = $3->exp_value;
-											$$ = asgn;
+	assign_stmt:	var_expr '=' expr  	{ 	
+											$$ = create_node_ast('=',NULL,$1,$3);			
 										}
 		;
 
 	expr	:	NUM 		{
-								$$ = create_node_ast("NUM",$1,NULL);
+								node* num = create_node_ast('d',NULL,NULL,NULL);
+								num->type = INT;
+								memset(&num->exp_value,0,sizeof(datavalue));
+								num->exp_value.integer = $1;
+								char word[13];
+								snprintf(word,sizeof(word),"%d",$1);
+								num->statement = strdup(word); 
+								$$ = num;
 							}
-		|   	b_NUM 			{
-								$$ = create_node_ast("boolean",$1,NULL);
+		|   	b_NUM 		{
+								node* b_num = create_node_ast('d',NULL,NULL,NULL);
+								b_num->type = BOOL;
+								memset(&b_num->exp_value,0,sizeof(datavalue));
+								b_num->exp_value.boolean = $1;
+								char word[13];
+								snprintf(word,sizeof(word),"%d",$1);
+								b_num->statement = strdup(word); 
+								$$ = b_num;
 							}
-		|	'-' NUM			{
-								node* neg = create_node_ast("UNARYMINUS",-$2,NULL);
-								neg->right = create_node_ast("NUM",-$2,NULL);
-								$$ = neg;
+		|	'-' expr			{
+								$$ = create_node_ast('u',NULL,NULL,$2);
 							}
 		|	var_expr		{$$ = $1;}
 		|	'(' expr ')'		{$$ = $2;}
 
 		|	expr '+' expr 		{ 
-									node* op = create_node_ast("PLUS",($1->exp_value + $3->exp_value),NULL);
-									op->left = $1;
-									op->right = $3;
-									$$ = op;
+									$$ = create_node_ast('+',NULL,$1,$3);
 								}
 		|	expr '-' expr	 	{
-									node* op = create_node_ast("SUB",($1->exp_value - $3->exp_value),NULL);
-									op->left = $1;
-									op->right = $3;
-									$$ = op;
+									$$ = create_node_ast('-',NULL,$1,$3);
 		 						}
 		|	expr '*' expr 		{
-									node* op = create_node_ast("MUL",($1->exp_value * $3->exp_value),NULL);
-									op->left = $1;
-									op->right = $3;
-									$$ = op;
+									$$ = create_node_ast('*',NULL,$1,$3);
 		 						}
 		|	expr '/' expr 		{ 	
-									assert($3->exp_value != 0);
-									node* op = create_node_ast("DIV",($1->exp_value / $3->exp_value),NULL);
-									op->left = $1;
-									op->right = $3;
-									$$ = op;
+									$$ = create_node_ast('/',NULL,$1,$3);
 								}
 
 		;
-	str_expr :  VAR {			$$ = create_node_ast($1->name,$1->value.integer,$1);
+	str_expr :  VAR {			$$ = create_node_ast('v',$1,NULL,NULL);
 								
 								}
                   | str_expr VAR   { ;}
                 ;
 	
-	var_expr:	VAR	{			$$ = create_node_ast($1->name,$1->value.integer,$1);}
-		|	var_expr '[' expr ']'	{            ;                                    }
+	var_expr:	VAR	{			$$ = create_node_ast('v',$1,NULL,NULL);}
+		|	var_expr '[' expr ']'	{            ;                     }
 		;
 %%
 
@@ -208,5 +186,7 @@ int main(int argc,char** argv){
 	wflag = 1;
 	yyparse();
 	print_symbol_table();
+	free_symbol_table(symbtbl);
+	free_graph();
 	return 0;
 }

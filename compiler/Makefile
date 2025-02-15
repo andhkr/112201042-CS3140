@@ -1,4 +1,4 @@
-CFLAGS = -Wall -I.
+CFLAGS = -g -Wall -I.
 
 SRC=src
 INCLUDE=include
@@ -22,7 +22,7 @@ $(SRC)/%.o : $(SRC)/%.c
 	gcc $(CFLAGS) -c $< -o $@
 
 $(BIN)/compiler:$(objs)
-	gcc -o $@ $^ -lm
+	gcc -g -o $@ $^ -lm
 
 clean:
 	rm -f $(SRC)/*.o $(SRC)/y.tab.c $(SRC)/y.tab.h $(SRC)/lex.yy.c $(BIN)/basic

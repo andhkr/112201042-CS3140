@@ -30,29 +30,38 @@ letter	[a-zA-Z]
 
 %%
 write			{
-					node* write = create_node_ast("write",0,NULL);
+					node* write = create_node_ast('d',NULL,NULL,NULL);
+					write->statement = "write";
 					yylval.treeNode = write;
 					return WRITE;
 				}	
 integer			{;
 					curr_datatype = INT;
-					yylval.treeNode = create_node_ast("integer",0,NULL);
+					node* integer = create_node_ast('d',NULL,NULL,NULL);
+					integer->statement = "integer";
+					yylval.treeNode = integer;
 					return T_INT;	
 				}		
 
 bool			{;
 					curr_datatype = BOOL;
-					yylval.treeNode = create_node_ast("bool",0,NULL);
+					node* boolean = create_node_ast('d',NULL,NULL,NULL);
+					boolean->statement = "boolean";
+					yylval.treeNode = boolean;
 					return T_BOOL;	
 				}
 
 begindecl		{
 					wflag = 1;
-					yylval.treeNode = create_node_ast("DECL",0,NULL);
+					node* decl = create_node_ast('d',NULL,NULL,NULL);
+					decl->statement = "DECL";
+					yylval.treeNode = decl;
 					return DECL;
 				}
 enddecl			{
-					yylval.treeNode = create_node_ast("",0,NULL);
+					node* enddecl = create_node_ast('d',NULL,NULL,NULL);
+					enddecl->statement = "ENDDECL";
+					yylval.treeNode = enddecl;
 					wflag = 0;
 					return ENDDECL;
 				}

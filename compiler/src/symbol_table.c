@@ -1,7 +1,6 @@
 #include "include/symbol_table.h"
 
 symbol_table* symbtbl = NULL;
-datatype curr_datatype = 10;
 
 bool is_prime(long n){
     /*skipping the multiple of 2 and 3*/
@@ -82,6 +81,9 @@ symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id){
 
 symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value){
     int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
+    // for table the max lenght of variable to be printed
+    clen_for_var = (clen_for_var<strlen(name)?(strlen(name)):clen_for_var);
+
     if(symbtbl->table[hashvalue].name==NULL){
         init_entry(&symbtbl->table[hashvalue],name,type,value);
         return &symbtbl->table[hashvalue];
@@ -94,7 +96,7 @@ symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalu
                 prev = curr;
                 curr = curr->next;
             }
-            else if (curr->name == name){
+            else if (curr->type == type){
                 fprintf(stderr,"Error: confilicting types for %s",curr->name);
                 exit(EXIT_FAILURE);
             }
@@ -131,3 +133,4 @@ symbltblentry* get_entry(symbol_table* symbtbl,char* name){
         }
     }
 }
+
