@@ -18,6 +18,7 @@ void* safe_malloc(size_t size);
 node* create_node_ast(char op,symbltblentry* entry,node* left,node* right);
 
 /* these are routines used by me for ast print*/
+/*
 void print_ast(node* root);
 
 void printtree(node* root);
@@ -25,13 +26,14 @@ void printtree(node* root);
 void print_decl(node* root);
 
 int depth(node* root);
+*/
 
 /* 
 inpired by Graph Source Code of LexAndYaccTutorial book 
 */
 /*
 i have done the modification wherever required for better look of graph
-after understanding them properly.
+after understanding them.
 */
 
 void init_graph(node* root);
