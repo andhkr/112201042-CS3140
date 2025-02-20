@@ -1,4 +1,5 @@
 #include "include/symbol_table.h"
+#include "include/ast.h"
 
 symbol_table* symbtbl = NULL;
 
@@ -64,10 +65,6 @@ void init_entry(symbltblentry* entry,char* name,datatype type,datavalue value){
     entry->next = NULL;
 }
 
-bool is_entryequal(symbltblentry* entry1,symbltblentry* entry2){
-    return strcmp(entry1->name,entry2->name)==0 && (entry1->type == entry2->type);
-}
-
 symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id){
     symbol_table* symbtbl = safe_alloc(1,sizeof(symbol_table));
     int capacity = size_of_table(size);
@@ -83,21 +80,22 @@ symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalu
     int hashvalue = symbtbl->hashvalue_of_key(name)%symbtbl->capacity;
     // for table the max lenght of variable to be printed
     clen_for_var = (clen_for_var<strlen(name)?(strlen(name)):clen_for_var);
-
+    symbltblentry* entry = NULL;
     if(symbtbl->table[hashvalue].name==NULL){
         init_entry(&symbtbl->table[hashvalue],name,type,value);
-        return &symbtbl->table[hashvalue];
+        entry = &symbtbl->table[hashvalue];
     }else{
         symbltblentry* curr = &symbtbl->table[hashvalue];
         symbltblentry* new_entry = create_node(name,type,value);
         symbltblentry* prev = NULL;
         while(curr){
-            if(!is_entryequal(curr,new_entry)){
+            if(strcmp(curr->name,new_entry->name)!=0){
                 prev = curr;
                 curr = curr->next;
             }
-            else if (curr->type == type){
-                fprintf(stderr,"Error: confilicting types for %s",curr->name);
+            else if (curr->type != type){
+                fprintf(stderr,"error: confilicting types for '%s';have '%s'\n",curr->name,typename[type]);
+                fprintf(stderr,"note:previous defination of '%s' with type '%s'\n",curr->name,typename[type]);
                 exit(EXIT_FAILURE);
             }
             else{
@@ -106,9 +104,9 @@ symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalu
             }
         }
         prev->next = new_entry;
-        return new_entry;
+        entry = new_entry;
     }
-    return NULL;
+    return entry;
 }
 
 symbltblentry* get_entry(symbol_table* symbtbl,char* name){
@@ -134,3 +132,22 @@ symbltblentry* get_entry(symbol_table* symbtbl,char* name){
     }
 }
 
+void add_array_to_symbtbl(
+    struct node* var,  /* already array name is created as node with type*/
+    int n_ele   /* number of elements in array*/
+)
+{   
+    switch(var->type){
+        case INT:
+            int* arr = (int*) calloc(n_ele,sizeof(int));
+            var->entry->type = INTARRAY;
+            intarray array;
+            array.capacity = n_ele;
+            array.ptr = arr;
+            array.index = 0;
+            update_data(&var->entry->value.intarr,&array,sizeof(intarray));
+            break;
+        default:
+            break;
+    }
+}

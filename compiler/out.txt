@@ -1,0 +1,133 @@
+                DECL
+    integer                vara  varb  varc  vard  vare  varf  
+--------------------------------------------------------------------------------------
+                DECL
+    boolean                falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh  flag1  
+
+   ASSIGN
+      |
+    |----|
+    v    v
+  vara  10
+
+   ASSIGN
+      |
+    |----|
+    v    v
+  varb  20
+
+       ASSIGN
+          |
+    |--------|
+    v        v
+  varc      MUL
+             |
+          |-----|
+          v     v
+        vara  varb
+
+       ASSIGN
+          |
+    |--------|
+    v        v
+  vard      SUB
+             |
+          |-----|
+          v     v
+        vara  varb
+
+       ASSIGN
+          |
+    |--------|
+    v        v
+  vare     PLUS
+             |
+          |-----|
+          v     v
+        varc  vard
+
+                               ASSIGN
+                                  |
+    |--------------------------------|
+    v                                v
+  varf                             PLUS
+                                     |
+             |-----------------------------|
+             v                             v
+           PLUS                           MUL
+             |                             |
+          |-----|        |-----------------------|
+          v     v        v                       v
+        vara  varb      MUL                     MUL
+                         |                       |
+                      |-----|        |-----------------|
+                      v     v        v                 v
+                    varc  vard      MUL              PLUS
+                                     |                 |
+                                  |-----|     |-----------|
+                                  v     v     v           v
+                                vard  vare  vara         MUL
+                                                          |
+                                                    |--------|
+                                                    v        v
+                                                  varb     PLUS
+                                                             |
+                                                          |-----|
+                                                          v     v
+                                                        varc  vard
+
+   ASSIGN
+      |
+    |----|
+    v    v
+  flag1  1
+
+                   ASSIGN
+                     |
+                    |-------------------|
+                    v                   v
+  falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh  0
+
+      CALL
+       |
+    |------|
+    v      v
+  write  vara
+
+      CALL
+       |
+    |------|
+    v      v
+  write  varb
+
+      CALL
+       |
+    |------|
+    v      v
+  write  varc
+
+      CALL
+       |
+    |------|
+    v      v
+  write  vard
+
+      CALL
+       |
+    |------|
+    v      v
+  write  vare
+
+Symbol Table:
++--------------------------------------+------------+------------+
+| variable                             | type       | value      |
++--------------------------------------+------------+------------+
+| falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh | bool       | 0          |
+| vara                                 | int        | 10         |
+| flag1                                | bool       | 1          |
+| varb                                 | int        | 20         |
+| varc                                 | int        | 200        |
+| vard                                 | int        | -10        |
+| vare                                 | int        | 190        |
+| varf                                 | int        | 1593098142 |
++--------------------------------------+------------+------------+

@@ -12,7 +12,7 @@ typedef enum{
     DOUBLE,
     FLOAT,
     FUNCPTR,
-    VPTR,
+    INTARRAY,
     ENTRY,
     OP,
     STATEMENT,
@@ -21,6 +21,12 @@ typedef enum{
 
 extern datatype curr_datatype;
 
+typedef struct intarray{
+    int* ptr;
+    int capacity;
+    int index;
+}intarray;
+
 typedef union{
     int integer;
     char character;
@@ -28,7 +34,7 @@ typedef union{
     double ldecimal;
     float  sdecimal;
     void* (*funcptr) (void);
-    void* ptr;
+    intarray intarr;
     bool boolean;
 }datavalue;
 

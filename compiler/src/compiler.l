@@ -43,7 +43,7 @@ integer			{;
 					return T_INT;	
 				}		
 
-bool			{;
+boolean			{;
 					curr_datatype = BOOL;
 					node* boolean = create_node_ast('d',NULL,NULL,NULL);
 					boolean->statement = "boolean";
@@ -66,16 +66,42 @@ enddecl			{
 					return ENDDECL;
 				}
 
+true           {	yylval.b_var = true;
+					return T;
+				}
+false           {	yylval.b_var = false;
+					return F;
+				}
+
+if				{
+					// create_node_ast('d',NULL,NULL,NULL)
+				}
+then				{
+					}	
+else				{
+					}	
+endif				{
+				}
+for 				{
+				}		
+"=="				{
+					}	
+"<="				{
+				}
+">="				{
+				}
+"!="				{
+					}	
+AND				{
+					}	
+OR				{
+				}
+NOT			{
+				}
+
 {digit}+		{ 	
 					yylval.var = atoi(yytext);
 					return NUM;
-				}
-
-True           {	yylval.b_var = 1;
-					return b_NUM;
-				}
-False           {	yylval.b_var = 0;
-					return b_NUM;
 				}
 {letter}({letter}|{digit})*	{
 								if(wflag == 1){
@@ -89,7 +115,7 @@ False           {	yylval.b_var = 0;
 								}
 								return VAR;
 							}
-[-+*/=();,]         {
+[-+*/=()><;,\{\}\[\]\%]         {
 						return *yytext;
 				}			
 \n                  {

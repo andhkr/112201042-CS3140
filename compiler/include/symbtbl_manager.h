@@ -8,6 +8,7 @@ typedef struct manager{
     int capacity;
     int size;
     int current_table;
+    int current_scope;
 }symbtbl_manager;
 
 extern symbtbl_manager manager;
@@ -28,7 +29,9 @@ void print_entry(symbltblentry* entry);
 
 void table_format();
 
+void free_link_list(symbltblentry* head);
+
 void free_symbol_table(symbol_table* symbtbl);
 
-void free_link_list(symbltblentry* head);
+void free_symbol_table_manager(symbtbl_manager* manager);
 #endif

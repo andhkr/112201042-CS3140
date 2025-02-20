@@ -32,8 +32,6 @@ symbltblentry* create_node(char* name,datatype type,datavalue value);
 
 void init_entry(symbltblentry* entry,char* name,datatype type,datavalue value);
 
-bool is_entryequal(symbltblentry* entry1,symbltblentry* entry2);
-
 /* symbol table specification and member functions*/
 typedef struct symbol_table{
     int (*hashvalue_of_key) (char*);
@@ -49,5 +47,11 @@ symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id);
 symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value);
 
 symbltblentry* get_entry(symbol_table* symbtbl,char* name);
+
+struct node;
+void add_array_to_symbtbl(
+    struct node* var,  /* already array name is created as node with type*/
+    int n_ele   /* number of elements in array*/
+);
 
 #endif

@@ -22,22 +22,22 @@ node* create_node_ast(char op,symbltblentry* entry,node* left,node* right){
         case '+':
             type_checking(left,right);
             Add(new_node,left,right);
-            init_node(new_node,entry,left,right,"+");
+            init_node(new_node,entry,left,right,"PLUS");
             break;
         case '-':
             type_checking(left,right);
             Sub(new_node,left,right);
-            init_node(new_node,entry,left,right,"-");
+            init_node(new_node,entry,left,right,"SUB");
             break;
         case '*':
             type_checking(left,right);
             Mul(new_node,left,right);
-            init_node(new_node,entry,left,right,"*");
+            init_node(new_node,entry,left,right,"MUL");
             break;
         case '/':
             type_checking(left,right);
             Div(new_node,left,right);
-            init_node(new_node,entry,left,right,"/");
+            init_node(new_node,entry,left,right,"DIV");
             break;
         case 'n':
             neg_type_check(right);
@@ -50,12 +50,17 @@ node* create_node_ast(char op,symbltblentry* entry,node* left,node* right){
         case 'v':
             init_node(new_node,entry,left,right,entry->name);
             update_data(&new_node->exp_value,&entry->value,datasize[entry->type]);
+            new_node->type = entry->type;
             break;
         case '=':
             type_checking(left,right);
-            init_node(new_node,entry,left,right,"=");
-            update_data(&new_node->exp_value,&right->exp_value,datasize[right->type]);
+            // printf("RAdha2\n");
+            init_node(new_node,entry,left,right,"ASSIGN");
+            // update_data(&new_node->exp_value,&right->exp_value,datasize[right->type]);
+            // printf("RAdha3\n");
+            if(left->type != INTARRAY)
             update_data(&left->entry->value,&right->exp_value,datasize[left->entry->type]);
+            // printf("RAdha4\n");
             break;
         case 'd':
             init_node(new_node,entry,left,right," ");

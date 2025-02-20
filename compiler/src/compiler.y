@@ -21,11 +21,13 @@
 	#include "include/symbtbl_manager.h"
 	#include <assert.h>
 	#include <string.h>
+	#include <stdbool.h>
+
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
 	extern int wflag;
-	#include <stdbool.h>
+	int i;
 %}
 
 %union{
@@ -40,13 +42,25 @@
 %token <entry> VAR
 %token <var> NUM 
 %token <b_var> b_NUM
+%token <b_var> T F
 
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
 %type <treeNode> ret_type Gid var_expr str_expr Glist
 
 %right '='
+%left '<' '>'
+%left EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
 %left '+' '-'
 %left '*' '/'
+%left '%'
+%left LOGICAL_AND LOGICAL_OR
+%left LOGICAL_NOT
+
+%token BEG END
+%token IF THEN ELSE ENDIF
+%token LOGICAL_AND LOGICAL_NOT LOGICAL_OR
+%token EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
+%token FOR 
 
 %%
 
@@ -90,13 +104,36 @@
 		|	Gid ',' Glist { $1->right = $3;
 							$$ = $1;
 							}
+		|	func ',' Glist
 		;
 	
 	Gid	:	VAR		{ 
 						$$ = create_node_ast('v',$1,NULL,NULL);
 					}
-		|	Gid '[' NUM ']'	{}
+		|	Gid '[' NUM ']'	{
+						/*array creation*/
+						add_array_to_symbtbl($1,$3);
+						$$ = $1;
+					}
+	func 	:	VAR '(' arg_list ')' 					{ 					}
+		;
+			
+	arg_list:	
+		|	arg_list1
+		;
+		
+	arg_list1:	arg_list1 ';' arg
+		|	arg
+		;
+		
+	arg 	:	arg_type var_list	
+		;
+		
+	arg_type:	T_INT		 {  }
+		;
 
+	var_list:	VAR 		 { }
+		|	VAR ',' var_list { 	}
 		;		
 
 	stmt_list:	/* NULL */		{  ;}
@@ -111,6 +148,7 @@
 		|	write_stmt ';'		 {/*print asignment syntax tree*/
 									graph($1);
 								}
+		|	cond_stmt 			{ }
 		;
 
 	write_stmt:	WRITE '(' expr ')' 	{
@@ -120,8 +158,17 @@
 		;
 	
 	assign_stmt:	var_expr '=' expr  	{ 	
-											$$ = create_node_ast('=',NULL,$1,$3);			
+											$$ = create_node_ast('=',NULL,$1,$3);		
+											if($1->type == INTARRAY){
+												// printf("%d")
+												$1->entry->value.intarr.ptr[$1->entry->value.intarr.index] = $3->exp_value.integer;
+											}	
+											// printf("RAdha5\n");
 										}
+		;
+	cond_stmt:	IF expr THEN stmt_list ENDIF 	{ 						}
+		|	IF expr THEN stmt_list ELSE stmt_list ENDIF 	{ 						}
+	        |    FOR '(' assign_stmt  ';'  expr ';'  assign_stmt ')' '{' stmt_list '}'                                             {                                                 }
 		;
 
 	expr	:	NUM 		{
@@ -144,6 +191,8 @@
 								b_num->statement = strdup(word); 
 								$$ = b_num;
 							}
+		|	T			{ 						  	}
+		|	F			{ 	}
 		|	'-' expr			{
 								$$ = create_node_ast('u',NULL,NULL,$2);
 							}
@@ -162,7 +211,16 @@
 		|	expr '/' expr 		{ 	
 									$$ = create_node_ast('/',NULL,$1,$3);
 								}
-
+		|	expr '%' expr 		{ 						}
+		|	expr '<' expr		{ 						}
+		|	expr '>' expr		{ 						}
+		|	expr GREATERTHANOREQUAL expr				{ 						}
+		|	expr LESSTHANOREQUAL expr	{  						}
+		|	expr NOTEQUAL expr			{ 						}
+		|	expr EQUALEQUAL expr	{ 						}
+		|	LOGICAL_NOT expr	{ 						}
+		|	expr LOGICAL_AND expr	{ 						}
+		|	expr LOGICAL_OR expr	{}
 		;
 	str_expr :  VAR {			$$ = create_node_ast('v',$1,NULL,NULL);
 								
@@ -170,8 +228,14 @@
                   | str_expr VAR   { ;}
                 ;
 	
-	var_expr:	VAR	{			$$ = create_node_ast('v',$1,NULL,NULL);}
-		|	var_expr '[' expr ']'	{            ;                     }
+	var_expr:	VAR	{			 $$ = create_node_ast('v',$1,NULL,NULL);}
+		|	var_expr '[' expr ']'	{
+										$1->statement = "Array";
+										$1->type = INTARRAY;
+										$1->entry->value.intarr.index = $3->exp_value.integer;
+										$$ = $1;
+										// printf("RAdha\n");
+									} 
 		;
 %%
 
@@ -186,7 +250,7 @@ int main(int argc,char** argv){
 	wflag = 1;
 	yyparse();
 	print_symbol_table();
-	free_symbol_table(symbtbl);
+	free_symbol_table_manager(&manager);
 	free_graph();
 	return 0;
 }

@@ -1,9 +1,22 @@
 #include "include/semantic.h"
 
 bool type_checking(node* left,node* right){
-    if( !(left->type != STRING || right->type != STRING)){
-        fprintf(stderr,"error:type mismatch\n");
-        exit(EXIT_FAILURE);
+    if(left->type!=INTARRAY){
+        if( !(left->type != STRING || right->type != STRING)){
+            fprintf(stderr,"error:type mismatch\n");
+            exit(EXIT_FAILURE);
+        }
+    }else{
+        switch(left->type){
+            case INTARRAY:
+                if(right->type != INT){
+                    fprintf(stderr,"error:type mismatch\n");
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            default:
+                break;
+        }
     }
     return true;
 }
@@ -95,3 +108,4 @@ void Div(node* new_node,node* left,node* right){
             typename[left->type],typename[right->type]);
     }
 }
+

@@ -12,6 +12,7 @@ void init_symbtbl_manager(symbtbl_manager* manager){
     manager->size     = 0;
     manager->array    = (symbol_table**) safe_alloc(2,sizeof(symbol_table*));
     manager->current_table = 0;
+    manager->current_scope = 0;
 }
 
 void allocation(symbtbl_manager* manager){
@@ -40,7 +41,6 @@ symbol_table* pop_back(symbtbl_manager* manager){
     }
     return manager->array[--(manager->size)];
 }
-
 
 void print_symbol_table(){
     symbol_table* curr = manager.array[0];
@@ -96,6 +96,14 @@ void print_entry(symbltblentry* entry){
                     clen_for_val,entry->value.boolean
                     );
             break;
+        case INTARRAY:
+            printf  ("| %-*s | %-*s | ",clen_for_var,entry->name,
+                    clen_for_type,"int array"
+                    );
+            for(int i = 0;i<entry->value.intarr.capacity;++i){
+                printf("%d , ",entry->value.intarr.ptr[i]);
+            }
+            printf("|\n");
         default:
             break;
     }
@@ -121,9 +129,18 @@ void table_format(){
     printf("+\n");
 }
 
+void free_link_list(symbltblentry* head){
+    symbltblentry* prev = NULL;
+    symbltblentry* curr = head;
+    while(curr){
+        prev = curr->next;
+        free(curr);
+        curr = prev;
+    }
+}
 
 void free_symbol_table(symbol_table* symbtbl){
-    symbol_table* curr = manager.array[0];
+    symbol_table* curr = symbtbl;
     for(int i = 0;i<curr->capacity;++i){
         if(curr->table[i].name != NULL){
             free_link_list(curr->table[i].next);
@@ -133,12 +150,11 @@ void free_symbol_table(symbol_table* symbtbl){
     symbtbl->table = NULL;
 }
 
-void free_link_list(symbltblentry* head){
-    symbltblentry* prev = NULL;
-    symbltblentry* curr = head;
-    while(curr){
-        prev = curr->next;
-        free(curr);
-        curr = prev;
+void free_symbol_table_manager(symbtbl_manager* manager){
+    for(int i = 0;i<manager->size;++i){
+        free_symbol_table(manager->array[i]);
+        manager->array[i] = NULL;
     }
+    free(manager->array);
+    manager->array = NULL;
 }
