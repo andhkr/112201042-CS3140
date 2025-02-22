@@ -59,25 +59,20 @@ extern int yydebug;
     ENDDECL = 260,                 /* ENDDECL  */
     T_INT = 261,                   /* T_INT  */
     T_BOOL = 262,                  /* T_BOOL  */
-    VAR = 263,                     /* VAR  */
-    NUM = 264,                     /* NUM  */
-    b_NUM = 265,                   /* b_NUM  */
-    T = 266,                       /* T  */
-    F = 267,                       /* F  */
-    BEG = 268,                     /* BEG  */
-    END = 269,                     /* END  */
-    IF = 270,                      /* IF  */
-    THEN = 271,                    /* THEN  */
-    ELSE = 272,                    /* ELSE  */
-    ENDIF = 273,                   /* ENDIF  */
-    LOGICAL_AND = 274,             /* LOGICAL_AND  */
-    LOGICAL_NOT = 275,             /* LOGICAL_NOT  */
-    LOGICAL_OR = 276,              /* LOGICAL_OR  */
-    EQUALEQUAL = 277,              /* EQUALEQUAL  */
-    LESSTHANOREQUAL = 278,         /* LESSTHANOREQUAL  */
-    GREATERTHANOREQUAL = 279,      /* GREATERTHANOREQUAL  */
-    NOTEQUAL = 280,                /* NOTEQUAL  */
-    FOR = 281                      /* FOR  */
+    IF = 263,                      /* IF  */
+    ELSE = 264,                    /* ELSE  */
+    LOGICAL_AND = 265,             /* LOGICAL_AND  */
+    LOGICAL_NOT = 266,             /* LOGICAL_NOT  */
+    LOGICAL_OR = 267,              /* LOGICAL_OR  */
+    EQUALEQUAL = 268,              /* EQUALEQUAL  */
+    LESSTHANOREQUAL = 269,         /* LESSTHANOREQUAL  */
+    GREATERTHANOREQUAL = 270,      /* GREATERTHANOREQUAL  */
+    NOTEQUAL = 271,                /* NOTEQUAL  */
+    FOR = 272,                     /* FOR  */
+    VAR = 273,                     /* VAR  */
+    NUM = 274,                     /* NUM  */
+    T = 275,                       /* T  */
+    F = 276                        /* F  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -91,25 +86,20 @@ extern int yydebug;
 #define ENDDECL 260
 #define T_INT 261
 #define T_BOOL 262
-#define VAR 263
-#define NUM 264
-#define b_NUM 265
-#define T 266
-#define F 267
-#define BEG 268
-#define END 269
-#define IF 270
-#define THEN 271
-#define ELSE 272
-#define ENDIF 273
-#define LOGICAL_AND 274
-#define LOGICAL_NOT 275
-#define LOGICAL_OR 276
-#define EQUALEQUAL 277
-#define LESSTHANOREQUAL 278
-#define GREATERTHANOREQUAL 279
-#define NOTEQUAL 280
-#define FOR 281
+#define IF 263
+#define ELSE 264
+#define LOGICAL_AND 265
+#define LOGICAL_NOT 266
+#define LOGICAL_OR 267
+#define EQUALEQUAL 268
+#define LESSTHANOREQUAL 269
+#define GREATERTHANOREQUAL 270
+#define NOTEQUAL 271
+#define FOR 272
+#define VAR 273
+#define NUM 274
+#define T 275
+#define F 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -122,7 +112,7 @@ union YYSTYPE
 	node*  treeNode;
 	symbltblentry* entry;
 
-#line 126 "src/y.tab.h"
+#line 116 "src/y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

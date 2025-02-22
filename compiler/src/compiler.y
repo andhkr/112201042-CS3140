@@ -37,15 +37,18 @@
 	symbltblentry* entry;
 }
 
-%token <treeNode> WRITE 
-%token <treeNode> DECL ENDDECL T_INT T_BOOL
+%token <treeNode> WRITE DECL ENDDECL T_INT T_BOOL
+%token <treeNode> IF ELSE
+%token <treeNode> LOGICAL_AND LOGICAL_NOT LOGICAL_OR
+%token <treeNode> EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
+%token <treeNode> FOR
 %token <entry> VAR
 %token <var> NUM 
-%token <b_var> b_NUM
 %token <b_var> T F
 
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
-%type <treeNode> ret_type Gid var_expr str_expr Glist
+%type <treeNode> ret_type Gid var_expr str_expr Glist 
+%type <treeNode> cond_stmt stmt_list
 
 %right '='
 %left '<' '>'
@@ -55,43 +58,31 @@
 %left '%'
 %left LOGICAL_AND LOGICAL_OR
 %left LOGICAL_NOT
+%left ELSE
 
-%token BEG END
-%token IF THEN ELSE ENDIF
-%token LOGICAL_AND LOGICAL_NOT LOGICAL_OR
-%token EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
-%token FOR 
+// %token BEG END
+// %token IF THEN ELSE ENDIF
+// %token LOGICAL_AND LOGICAL_NOT LOGICAL_OR
+// %token EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
+// %token FOR 
+
 
 %%
 
 	Prog	:	Gdecl_sec stmt_list
 		;
 		
-	Gdecl_sec:	DECL Gdecl_list ENDDECL{ 
-						$1->left = $2;
-						$1->right = $2->right;
-						$2->right = NULL;
-						print_decl($1);
-						}
+	Gdecl_sec:	DECL Gdecl_list ENDDECL{}
 		;
-		
-	Gdecl_list:              {$$ = NULL;}
-		| 	Gdecl Gdecl_list { 
-								node* curr = $1->right;
-								node* prev = curr;
-								while(curr){
-									prev = curr;
-									curr = curr->right;
-								}
-								prev->right = $2;
-								$$ = $1;
-							}
+	Gdecl_list:              {}
+		| 	Gdecl Gdecl_list {}
 		;
 		
 	Gdecl 	:	ret_type Glist ';'  {
-										$1->right = $2;
-										$$ = $1;
-										
+										$1->ptr_sibling = $2;
+										node* dec = create_empty_node("DECL");
+										dec->ptr_children_list = $1;
+										graph(dec);										
 									}
 		;
 		
@@ -100,20 +91,29 @@
 									}
 		;
 		
-	Glist 	:	Gid       {$$ = $1;}
-		|	Gid ',' Glist { $1->right = $3;
-							$$ = $1;
+	Glist 	:	Gid       	{$$ = $1;}
+		|	Gid ',' Glist 	{ 
+								$1->ptr_sibling = $3;
+								$$ = $1;
 							}
 		|	func ',' Glist
 		;
 	
 	Gid	:	VAR		{ 
-						$$ = create_node_ast('v',$1,NULL,NULL);
+						node* var_node = create_empty_node($1->name);
+						var_node->entry = $1;
+						$$ = var_node;;
 					}
 		|	Gid '[' NUM ']'	{
 						/*array creation*/
 						add_array_to_symbtbl($1,$3);
-						$$ = $1;
+						node* arr = create_empty_node("array declaration");
+						char word[13];
+						snprintf(word,sizeof(word),"%d",$3);
+						node* right = create_empty_node(word);
+						arr->ptr_children_list = $1;
+						$1->ptr_sibling = right;
+						$$ = arr;
 					}
 	func 	:	VAR '(' arg_list ')' 					{ 					}
 		;
@@ -142,99 +142,130 @@
 		;
 
 	statement:	assign_stmt  ';' { /*print asignment syntax tree*/
+								if(stm_stack.sp == 0)
 									graph($1);
 									
 								}
-		|	write_stmt ';'		 {/*print asignment syntax tree*/
+		|	write_stmt ';'		 {/*print write syntax tree*/
 									graph($1);
 								}
-		|	cond_stmt 			{ }
+		|	cond_stmt 			{/*print cond_stmt syntax tree*/
+									graph($1);
+								}
 		;
 
 	write_stmt:	WRITE '(' expr ')' 	{
-										$$ = create_node_ast('c',NULL,$1,$3);
+										$$ = create_node_ast(FUN_CALL,NULL,$1,$3);
 									}
 		 | WRITE '(''"' str_expr '"'')'      { /*unable to understand*/;}
 		;
 	
 	assign_stmt:	var_expr '=' expr  	{ 	
-											$$ = create_node_ast('=',NULL,$1,$3);		
-											if($1->type == INTARRAY){
-												// printf("%d")
-												$1->entry->value.intarr.ptr[$1->entry->value.intarr.index] = $3->exp_value.integer;
-											}	
-											// printf("RAdha5\n");
+											$$ = create_node_ast(ASSIGN,NULL,$1,$3);		
 										}
 		;
-	cond_stmt:	IF expr THEN stmt_list ENDIF 	{ 						}
-		|	IF expr THEN stmt_list ELSE stmt_list ENDIF 	{ 						}
-	        |    FOR '(' assign_stmt  ';'  expr ';'  assign_stmt ')' '{' stmt_list '}'                                             {                                                 }
+	cond_stmt:	IF expr '{' stmt_list '}' 	{	
+												$1->ptr_children_list = $2;
+												$2->ptr_sibling = $4;
+												$$ = $1;
+											}
+		|	IF expr '{' stmt_list '}'ELSE '{'stmt_list '}' 	{ 
+																node* branch = create_empty_node("branch");
+																branch->ptr_children_list = $1;
+																$1->ptr_children_list = $2;
+																$2->ptr_sibling = $4;
+																$1->ptr_sibling = $6;
+																$6->ptr_children_list = $8;
+																$$ = branch;
+															}
+	    |    FOR '(' assign_stmt  ';'  expr ';'  assign_stmt ')' '{' stmt_list '}'	{ 
+																						$1->ptr_children_list = $3;
+																						$3->ptr_sibling = $5;
+																						$5->ptr_sibling = $7;
+																						$7->ptr_sibling = $10;
+																						for_loop($1);
+																						$$ = $1;
+		                                                							}
 		;
 
 	expr	:	NUM 		{
-								node* num = create_node_ast('d',NULL,NULL,NULL);
+								char word[13];
+								snprintf(word,sizeof(word),"%d",$1);
+								node* num = create_empty_node(word);
 								num->type = INT;
 								memset(&num->exp_value,0,sizeof(datavalue));
 								num->exp_value.integer = $1;
-								char word[13];
-								snprintf(word,sizeof(word),"%d",$1);
-								num->statement = strdup(word); 
 								$$ = num;
 							}
-		|   	b_NUM 		{
-								node* b_num = create_node_ast('d',NULL,NULL,NULL);
-								b_num->type = BOOL;
-								memset(&b_num->exp_value,0,sizeof(datavalue));
-								b_num->exp_value.boolean = $1;
-								char word[13];
-								snprintf(word,sizeof(word),"%d",$1);
-								b_num->statement = strdup(word); 
-								$$ = b_num;
+		|		T			{ 						  	
+								node* True = create_empty_node("true");
+								True->type = BOOL;
+								memset(&True->exp_value,0,sizeof(datavalue));
+								True->exp_value.boolean = $1;
+								$$ = True;
 							}
-		|	T			{ 						  	}
-		|	F			{ 	}
-		|	'-' expr			{
-								$$ = create_node_ast('u',NULL,NULL,$2);
+		|		F			{ 
+								node* False = create_empty_node("false");
+								False->type = BOOL;
+								memset(&False->exp_value,0,sizeof(datavalue));
+								False->exp_value.boolean = $1;
+								$$ = False;
+							}
+		|	'-' expr		{
+								$$ = create_node_ast(U_MINUS,NULL,NULL,$2);
 							}
 		|	var_expr		{$$ = $1;}
 		|	'(' expr ')'		{$$ = $2;}
 
 		|	expr '+' expr 		{ 
-									$$ = create_node_ast('+',NULL,$1,$3);
+									$$ = create_node_ast(PLUS,NULL,$1,$3);
 								}
 		|	expr '-' expr	 	{
-									$$ = create_node_ast('-',NULL,$1,$3);
+									$$ = create_node_ast(SUB,NULL,$1,$3);
 		 						}
 		|	expr '*' expr 		{
-									$$ = create_node_ast('*',NULL,$1,$3);
+									$$ = create_node_ast(MUL,NULL,$1,$3);
 		 						}
 		|	expr '/' expr 		{ 	
-									$$ = create_node_ast('/',NULL,$1,$3);
+									$$ = create_node_ast(DIV,NULL,$1,$3);
 								}
-		|	expr '%' expr 		{ 						}
-		|	expr '<' expr		{ 						}
+		|	expr '%' expr 		{   
+															
+								}
+		|	expr '<' expr		{
+									$$ = create_node_ast(LESSTHAN,NULL,$1,$3);
+		 						}
 		|	expr '>' expr		{ 						}
 		|	expr GREATERTHANOREQUAL expr				{ 						}
 		|	expr LESSTHANOREQUAL expr	{  						}
 		|	expr NOTEQUAL expr			{ 						}
-		|	expr EQUALEQUAL expr	{ 						}
+		|	expr EQUALEQUAL expr	{
+										$$ = create_node_ast(EQUAL_EQUAL,NULL,$1,$3);
+		 							}
 		|	LOGICAL_NOT expr	{ 						}
 		|	expr LOGICAL_AND expr	{ 						}
 		|	expr LOGICAL_OR expr	{}
 		;
-	str_expr :  VAR {			$$ = create_node_ast('v',$1,NULL,NULL);
-								
+	str_expr :  VAR {		node* var_node = create_empty_node($1->name);
+							var_node->entry = $1;
+							update_data(&var_node->exp_value,&$1->value,datasize[$1->type]);
+							$$ = var_node;
 								}
                   | str_expr VAR   { ;}
                 ;
 	
-	var_expr:	VAR	{			 $$ = create_node_ast('v',$1,NULL,NULL);}
+	var_expr:	VAR	{			node* var_node = create_empty_node($1->name);
+								var_node->entry = $1;
+								update_data(&var_node->exp_value,&$1->value,datasize[$1->type]);
+								$$ = var_node;
+					}
 		|	var_expr '[' expr ']'	{
-										$1->statement = "Array";
-										$1->type = INTARRAY;
-										$1->entry->value.intarr.index = $3->exp_value.integer;
+										char* label = "ArrayAccess";
+										$1->label = strdup(label);
+										update_data(&$1->exp_value,&$3->exp_value.integer,sizeof(int));
+										make_node($1);
+										$1->type = $1->entry->type;
 										$$ = $1;
-										// printf("RAdha\n");
 									} 
 		;
 %%
@@ -244,13 +275,14 @@ void yyerror ( char  *s) {
 }
 
 int main(int argc,char** argv){
-	symbtbl = create_symbtbl(64,hashvalue_of_key,0);
+	symbltbl = create_symbtbl(64,hashvalue_of_key,0);
 	init_symbtbl_manager(&manager);
-	push_back(&manager,symbtbl);
+	push_back(&manager,symbltbl);
+	init_stmt_stack(&stm_stack);
 	wflag = 1;
 	yyparse();
 	print_symbol_table();
-	free_symbol_table_manager(&manager);
-	free_graph();
+	// free_symbol_table_manager(&manager);
+	// free_graph();
 	return 0;
 }

@@ -1,133 +1,165 @@
-                DECL
-    integer                vara  varb  varc  vard  vare  varf  
---------------------------------------------------------------------------------------
-                DECL
-    boolean                falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh  flag1  
 
-   ASSIGN
+          DECL
+           |
+     |--------------|
+     v     v  v  v  v
+  integer  a  b  c  i
+
+             DECL
+               |
+     |-------------|
+     v             v
+  integer  array declaration
+                   |
+            |----|--
+            v    v
+           arr  10
+
+  ASSIGN
+     |
+  |---|
+  v   v
+  a  10
+
+    CALL
       |
     |----|
     v    v
-  vara  10
+  write  a
 
-   ASSIGN
+  ASSIGN
+     |
+  |---|
+  v   v
+  b  20
+
+    CALL
       |
     |----|
     v    v
-  varb  20
+  write  b
 
-       ASSIGN
+            ASSIGN
+               |
+  |-------------|
+  v             v
+  c            PLUS
+                |
+          |-----------|
+          v           v
+         SUB     ArrayAccess
+          |           |
+        |-----|   |---|
+        v     v   v   v
+       PLUS   b  arr  3
+        |
+     |----|
+     v    v
+     a   MUL
           |
-    |--------|
-    v        v
-  varc      MUL
-             |
-          |-----|
-          v     v
-        vara  varb
+        |--|
+        v  v
+        b  a
 
-       ASSIGN
-          |
-    |--------|
-    v        v
-  vard      SUB
-             |
-          |-----|
-          v     v
-        vara  varb
-
-       ASSIGN
-          |
-    |--------|
-    v        v
-  vare     PLUS
-             |
-          |-----|
-          v     v
-        varc  vard
-
-                               ASSIGN
-                                  |
-    |--------------------------------|
-    v                                v
-  varf                             PLUS
-                                     |
-             |-----------------------------|
-             v                             v
-           PLUS                           MUL
-             |                             |
-          |-----|        |-----------------------|
-          v     v        v                       v
-        vara  varb      MUL                     MUL
-                         |                       |
-                      |-----|        |-----------------|
-                      v     v        v                 v
-                    varc  vard      MUL              PLUS
-                                     |                 |
-                                  |-----|     |-----------|
-                                  v     v     v           v
-                                vard  vare  vara         MUL
-                                                          |
-                                                    |--------|
-                                                    v        v
-                                                  varb     PLUS
-                                                             |
-                                                          |-----|
-                                                          v     v
-                                                        varc  vard
-
-   ASSIGN
+    CALL
       |
     |----|
     v    v
-  flag1  1
+  write  c
 
-                   ASSIGN
-                     |
-                    |-------------------|
-                    v                   v
-  falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh  0
+  ASSIGN
+     |
+  |--|
+  v  v
+  c  1
 
-      CALL
-       |
-    |------|
-    v      v
-  write  vara
+            if
+             |
+    |-----------|
+    v           v
+    ==        ASSIGN
+    |           |
+  |---|       |--------|
+  v   v       v        v
+  a  10  ArrayAccess  19
+              |
+          |---|
+          v   v
+         arr  0
 
-      CALL
-       |
-    |------|
-    v      v
-  write  varb
+                            branch
+                               |
+                   |-----------------------------|
+                   v                             v
+                  if                           else
+                   |                             |
+    |-----------------|                          |
+    v                 v                          v
+    ==              ASSIGN                      if
+    |                 |                          |
+  |---|       |--------------|          |-----------|
+  v   v       v              v          v           v
+  b  20  ArrayAccess       PLUS         ==        ASSIGN
+              |              |          |           |
+          |---|            |-------|  |---|       |--------|
+          v   v            v       v  v   v       v        v
+         arr  0       ArrayAccess  1  a  10  ArrayAccess  19
+                           |                      |
+                       |---|                  |---|
+                       v   v                  v   v
+                      arr  0                 arr  0
 
-      CALL
-       |
-    |------|
-    v      v
-  write  varc
+                                        branch
+                                           |
+                                  |-----------------------------------------|
+                                  v                                         v
+                                  if                                       else
+                                  |                                         |
+    |---------------------------------|                                     |
+    v                                 v                                     v
+    ==                             branch                                 ASSIGN
+    |                                 |                                     |
+  |---|                   |-----------------------------|                 |--------|
+  v   v                   v                             v                 v        v
+  a  10                  if                           else           ArrayAccess  10
+                          |                             |                 |
+           |-----------------|                          |             |---|
+           v                 v                          v             v   v
+           ==              ASSIGN                      if            arr  5
+           |                 |                          |
+         |---|       |--------------|          |-----------|
+         v   v       v              v          v           v
+         b  20  ArrayAccess       PLUS         ==        ASSIGN
+                     |              |          |           |
+                 |---|            |-------|  |---|       |--------|
+                 v   v            v       v  v   v       v        v
+                arr  0       ArrayAccess  1  a  10  ArrayAccess  19
+                                  |                      |
+                              |---|                  |---|
+                              v   v                  v   v
+                             arr  0                 arr  0
 
-      CALL
-       |
-    |------|
-    v      v
-  write  vard
-
-      CALL
-       |
-    |------|
-    v      v
-  write  vare
+                      for
+                       |
+     |------|-------|--------------|
+     v      v       v              v
+  ASSIGN    <     ASSIGN        ASSIGN
+     |      |       |              |
+  |--|    |---|  |----|        |---------|
+  v  v    v   v  v    v        v         v
+  i  0    i  10  i  PLUS  ArrayAccess   PLUS
+                      |        |         |
+                    |--|   |---|       |---|
+                    v  v   v   v       v   v
+                    i  1  arr  1       i  10
 
 Symbol Table:
-+--------------------------------------+------------+------------+
-| variable                             | type       | value      |
-+--------------------------------------+------------+------------+
-| falg2jkdfhgdlkghdslfgjdgdjhgdjdsfgjh | bool       | 0          |
-| vara                                 | int        | 10         |
-| flag1                                | bool       | 1          |
-| varb                                 | int        | 20         |
-| varc                                 | int        | 200        |
-| vard                                 | int        | -10        |
-| vare                                 | int        | 190        |
-| varf                                 | int        | 1593098142 |
-+--------------------------------------+------------+------------+
++------------+------------+------------+
+| variable   | type       | value      |
++------------+------------+------------+
+| a          | int        | 10         |
+| b          | int        | 20         |
+| c          | int        | 1          |
+| i          | int        | 1          |
+| arr        | int array  | 1 , 11 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , |
++------------+------------+------------+

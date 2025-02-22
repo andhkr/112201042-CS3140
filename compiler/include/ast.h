@@ -3,38 +3,24 @@
 
 #include "symbol_table.h"
 
-
 typedef struct node{
-    char* statement;
-    symbltblentry* entry;
-    struct node* left;
-    struct node* right;
+    char* label;
     datatype     type;
     datavalue    exp_value;
+    symbltblentry* entry;
+    struct node* ptr_children_list;
+    struct node* ptr_sibling;
 }node;
 
 void* safe_malloc(size_t size);
 
-node* create_node_ast(char op,symbltblentry* entry,node* left,node* right);
+node* create_empty_node(char* label);
 
-/* these are routines used by me for ast print*/
-/*
-void print_ast(node* root);
+node* create_node_ast(opeartions op, symbltblentry *entry, node *left, node *right);
 
-void printtree(node* root);
+void make_node(node* array);
 
-void print_decl(node* root);
-
-int depth(node* root);
-*/
-
-/* 
-inpired by Graph Source Code of LexAndYaccTutorial book 
-*/
-/*
-i have done the modification wherever required for better look of graph
-after understanding them.
-*/
+void for_loop(node* );
 
 void init_graph(node* root);
 
@@ -58,7 +44,7 @@ l                 node-info
 void print_tree(  
         node *root,
         int c, int l,        /* start column and line of node */
-        int *ce, int *cm          /* resulting end column and mid of node */
+        int *ce, int *cm     /* resulting end column and mid of node */
 ) 
 ;
 
@@ -75,4 +61,5 @@ void graphDrawBox (char *s, int c, int l) ;
 void graphDrawArrow (int c1, int l1, int c2, int l2);
 
 void free_graph();
+
 #endif

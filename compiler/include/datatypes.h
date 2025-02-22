@@ -13,6 +13,9 @@ typedef enum{
     FLOAT,
     FUNCPTR,
     INTARRAY,
+    DOUBLEARRAY,
+    CHARARRAY,
+    STRINGARRAY,
     ENTRY,
     OP,
     STATEMENT,
@@ -24,8 +27,22 @@ extern datatype curr_datatype;
 typedef struct intarray{
     int* ptr;
     int capacity;
-    int index;
 }intarray;
+
+typedef struct doublearray{
+    double* ptr;
+    int capacity;
+}doublearray;
+
+typedef struct chararray{
+    char* ptr;
+    int capacity;
+}chararray;
+
+typedef struct stringarray{
+    char** ptr;
+    int capacity;
+}stringarray;
 
 typedef union{
     int integer;
@@ -35,6 +52,9 @@ typedef union{
     float  sdecimal;
     void* (*funcptr) (void);
     intarray intarr;
+    doublearray dblarr;
+    chararray   chararr;
+    stringarray strarr;
     bool boolean;
 }datavalue;
 
@@ -109,4 +129,33 @@ void neg_char(datavalue* d1,datavalue* result);
 /* negation function pointers */
 extern void (*neg[])(datavalue*,datavalue*);
 
+/* to manage statements, expression, operations, functions*/
+typedef enum {
+    PLUS,
+    SUB,
+    MUL,
+    DIV,
+    ASSIGN,
+    U_MINUS,
+    PERCENT,
+    LESSTHAN,
+    GREATERTHAN,
+    GREATT_EQUAL, /*greater than or equal to */
+    LESST_EQUAL,  /* less than or equal to*/
+    NOT_EQAUL,
+    EQUAL_EQUAL,
+    Logical_NOT,
+    Logical_AND,
+    Logical_OR,
+    FUN_CALL
+}opeartions;
+
+typedef enum {
+    IF_STMT,
+    ELSE_IF_STMT,
+    ELSE_STMT,
+    FOR_STMT
+}statements;
+
+extern statements curr_statement;
 #endif

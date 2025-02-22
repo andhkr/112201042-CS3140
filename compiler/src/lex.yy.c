@@ -515,10 +515,11 @@ int 	Lineno;
 int     wflag;
 #include "include/ast.h"
 #include "include/symbtbl_manager.h"
+#include "include/stack.h"
 #include "y.tab.h"
 #include <stdbool.h>
-#line 521 "src/lex.yy.c"
 #line 522 "src/lex.yy.c"
+#line 523 "src/lex.yy.c"
 
 #define INITIAL 0
 
@@ -735,9 +736,9 @@ YY_DECL
 		}
 
 	{
-#line 31 "src/compiler.l"
+#line 32 "src/compiler.l"
 
-#line 741 "src/lex.yy.c"
+#line 742 "src/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -796,148 +797,170 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 32 "src/compiler.l"
+#line 33 "src/compiler.l"
 {
-					node* write = create_node_ast('d',NULL,NULL,NULL);
-					write->statement = "write";
-					yylval.treeNode = write;
+					yylval.treeNode = create_empty_node("write");
 					return WRITE;
 				}	
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 38 "src/compiler.l"
-{;
+#line 37 "src/compiler.l"
+{
 					curr_datatype = INT;
-					node* integer = create_node_ast('d',NULL,NULL,NULL);
-					integer->statement = "integer";
-					yylval.treeNode = integer;
+					yylval.treeNode = create_empty_node("integer");
 					return T_INT;	
 				}		
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 46 "src/compiler.l"
+#line 43 "src/compiler.l"
 {;
 					curr_datatype = BOOL;
-					node* boolean = create_node_ast('d',NULL,NULL,NULL);
-					boolean->statement = "boolean";
-					yylval.treeNode = boolean;
+					yylval.treeNode = create_empty_node("boolean");
 					return T_BOOL;	
 				}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 54 "src/compiler.l"
+#line 49 "src/compiler.l"
 {
 					wflag = 1;
-					node* decl = create_node_ast('d',NULL,NULL,NULL);
-					decl->statement = "DECL";
-					yylval.treeNode = decl;
+					// node* decl = create_empty_node();
+					// decl->label = strdup("DECL");
+					yylval.treeNode = NULL;
 					return DECL;
 				}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 61 "src/compiler.l"
+#line 56 "src/compiler.l"
 {
-					node* enddecl = create_node_ast('d',NULL,NULL,NULL);
-					enddecl->statement = "ENDDECL";
-					yylval.treeNode = enddecl;
+					// node* enddecl = create_empty_node();
+					// enddecl->label = "ENDDECL";
+					yylval.treeNode = NULL;
 					wflag = 0;
 					return ENDDECL;
 				}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 69 "src/compiler.l"
+#line 64 "src/compiler.l"
 {	yylval.b_var = true;
 					return T;
 				}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 72 "src/compiler.l"
+#line 67 "src/compiler.l"
 {	yylval.b_var = false;
 					return F;
 				}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 76 "src/compiler.l"
+#line 71 "src/compiler.l"
 {
-					// create_node_ast('d',NULL,NULL,NULL)
+					yylval.treeNode = create_empty_node("if");
+					push_stmt(&stm_stack,IF_STMT);
+					return IF;
 				}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 79 "src/compiler.l"
+#line 76 "src/compiler.l"
 {
-					}	
+				}	
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 81 "src/compiler.l"
+#line 78 "src/compiler.l"
 {
-					}	
+					yylval.treeNode = create_empty_node("else");
+					push_stmt(&stm_stack,ELSE_STMT);
+					bool val = !(symbltbl->scope_level_truth);
+					if(stm_stack.sp >= 2){
+						val = val & stm_stack.array[(stm_stack.sp-1)].cond_val;
+					}
+					stm_stack.array[(stm_stack.sp-1)].cond_val = val;
+					stm_stack.cond_val  =  val;
+					return ELSE;
+				}	
 	YY_BREAK
 case 11:
-YY_RULE_SETUP
-#line 83 "src/compiler.l"
-{
-				}
-	YY_BREAK
-case 12:
-YY_RULE_SETUP
-#line 85 "src/compiler.l"
-{
-				}		
-	YY_BREAK
-case 13:
-YY_RULE_SETUP
-#line 87 "src/compiler.l"
-{
-					}	
-	YY_BREAK
-case 14:
 YY_RULE_SETUP
 #line 89 "src/compiler.l"
 {
 				}
 	YY_BREAK
-case 15:
+case 12:
 YY_RULE_SETUP
 #line 91 "src/compiler.l"
 {
+					yylval.treeNode = create_empty_node("for");
+					push_stmt(&stm_stack,FOR_STMT);
+					return FOR;
+				}		
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 96 "src/compiler.l"
+{
+					yylval.treeNode = create_empty_node("==");
+					return EQUALEQUAL;
+				}	
+	YY_BREAK
+case 14:
+YY_RULE_SETUP
+#line 100 "src/compiler.l"
+{
+					yylval.treeNode = create_empty_node("<=");
+					return LESSTHANOREQUAL;
+				}
+	YY_BREAK
+case 15:
+YY_RULE_SETUP
+#line 104 "src/compiler.l"
+{
+					yylval.treeNode = create_empty_node(">=");
+					return GREATERTHANOREQUAL;
 				}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 93 "src/compiler.l"
+#line 108 "src/compiler.l"
 {
-					}	
+					yylval.treeNode = create_empty_node("!=");
+					return NOTEQUAL;
+				}	
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 95 "src/compiler.l"
+#line 112 "src/compiler.l"
 {
-					}	
+					yylval.treeNode = create_empty_node("and");
+					return LOGICAL_AND;
+				}	
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 97 "src/compiler.l"
+#line 116 "src/compiler.l"
 {
+					yylval.treeNode = create_empty_node("or");
+					return LOGICAL_OR;
 				}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 99 "src/compiler.l"
+#line 120 "src/compiler.l"
 {
+					yylval.treeNode = create_empty_node("not");
+					return LOGICAL_NOT;
 				}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 102 "src/compiler.l"
+#line 125 "src/compiler.l"
 { 	
 					yylval.var = atoi(yytext);
 					return NUM;
@@ -945,15 +968,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 106 "src/compiler.l"
+#line 129 "src/compiler.l"
 {
 								if(wflag == 1){
 									datavalue v;
 									v.integer= 0;
-									symbltblentry* entr = add_entry(manager.array[0],strdup(yytext),curr_datatype,v);
+									symbltblentry* entr = add_entry(symbltbl,strdup(yytext),curr_datatype,v);
 									yylval.entry = entr;
 								}else{
-									symbltblentry* entr = get_entry(manager.array[0],strdup(yytext));
+									symbltblentry* entr = get_entry(symbltbl,strdup(yytext));
 									yylval.entry = entr;
 								}
 								return VAR;
@@ -961,29 +984,37 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 118 "src/compiler.l"
+#line 141 "src/compiler.l"
 {
+						if(*yytext == '{'){
+							symbltbl = create_symbtbl(64,hashvalue_of_key,0);
+							push_back(&manager,symbltbl);
+						}
+						if(stm_stack.sp != 0 && *yytext == '}'){
+							pop_stmt(&stm_stack);
+							pop_back(&manager);
+						}
 						return *yytext;
 				}			
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 121 "src/compiler.l"
+#line 152 "src/compiler.l"
 {
 						;
 					}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 124 "src/compiler.l"
+#line 155 "src/compiler.l"
 {
 	 					;
 					}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 127 "src/compiler.l"
+#line 158 "src/compiler.l"
 {
 						printf("Some new string which not in grammer\n");
 						exit(EXIT_FAILURE);
@@ -991,10 +1022,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 132 "src/compiler.l"
+#line 163 "src/compiler.l"
 ECHO;
 	YY_BREAK
-#line 998 "src/lex.yy.c"
+#line 1029 "src/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1999,7 +2030,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 132 "src/compiler.l"
+#line 163 "src/compiler.l"
 
 
 

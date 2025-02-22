@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "datatypes.h"
+#include "stack.h"
 
 extern int clen_for_var;
 extern int clen_for_type;
@@ -38,15 +39,16 @@ typedef struct symbol_table{
     symbltblentry* table;
     int capacity;
     int id;
+    bool scope_level_truth;
 }symbol_table;
 
-extern symbol_table* symbtbl;
+extern symbol_table* symbltbl;
 
 symbol_table* create_symbtbl(int size,int (*hashvalue_of_key) (char*),int id);
 
 symbltblentry* add_entry(symbol_table* symbtbl,char* name,datatype type,datavalue value);
 
-symbltblentry* get_entry(symbol_table* symbtbl,char* name);
+symbltblentry *find_entry(symbol_table *symbtbl, char *name);
 
 struct node;
 void add_array_to_symbtbl(

@@ -20,6 +20,7 @@ int 	Lineno;
 int     wflag;
 #include "include/ast.h"
 #include "include/symbtbl_manager.h"
+#include "include/stack.h"
 #include "y.tab.h"
 #include <stdbool.h>
 %}
@@ -30,38 +31,32 @@ letter	[a-zA-Z]
 
 %%
 write			{
-					node* write = create_node_ast('d',NULL,NULL,NULL);
-					write->statement = "write";
-					yylval.treeNode = write;
+					yylval.treeNode = create_empty_node("write");
 					return WRITE;
 				}	
-integer			{;
+integer			{
 					curr_datatype = INT;
-					node* integer = create_node_ast('d',NULL,NULL,NULL);
-					integer->statement = "integer";
-					yylval.treeNode = integer;
+					yylval.treeNode = create_empty_node("integer");
 					return T_INT;	
 				}		
 
 boolean			{;
 					curr_datatype = BOOL;
-					node* boolean = create_node_ast('d',NULL,NULL,NULL);
-					boolean->statement = "boolean";
-					yylval.treeNode = boolean;
+					yylval.treeNode = create_empty_node("boolean");
 					return T_BOOL;	
 				}
 
 begindecl		{
 					wflag = 1;
-					node* decl = create_node_ast('d',NULL,NULL,NULL);
-					decl->statement = "DECL";
-					yylval.treeNode = decl;
+					// node* decl = create_empty_node();
+					// decl->label = strdup("DECL");
+					yylval.treeNode = NULL;
 					return DECL;
 				}
 enddecl			{
-					node* enddecl = create_node_ast('d',NULL,NULL,NULL);
-					enddecl->statement = "ENDDECL";
-					yylval.treeNode = enddecl;
+					// node* enddecl = create_empty_node();
+					// enddecl->label = "ENDDECL";
+					yylval.treeNode = NULL;
 					wflag = 0;
 					return ENDDECL;
 				}
@@ -74,29 +69,57 @@ false           {	yylval.b_var = false;
 				}
 
 if				{
-					// create_node_ast('d',NULL,NULL,NULL)
+					yylval.treeNode = create_empty_node("if");
+					push_stmt(&stm_stack,IF_STMT);
+					return IF;
 				}
-then				{
-					}	
-else				{
-					}	
+then			{
+				}	
+else			{
+					yylval.treeNode = create_empty_node("else");
+					push_stmt(&stm_stack,ELSE_STMT);
+					bool val = !(symbltbl->scope_level_truth);
+					if(stm_stack.sp >= 2){
+						val = val & stm_stack.array[(stm_stack.sp-1)].cond_val;
+					}
+					stm_stack.array[(stm_stack.sp-1)].cond_val = val;
+					stm_stack.cond_val  =  val;
+					return ELSE;
+				}	
 endif				{
 				}
-for 				{
+for 			{
+					yylval.treeNode = create_empty_node("for");
+					push_stmt(&stm_stack,FOR_STMT);
+					return FOR;
 				}		
-"=="				{
-					}	
-"<="				{
+"=="			{
+					yylval.treeNode = create_empty_node("==");
+					return EQUALEQUAL;
+				}	
+"<="			{
+					yylval.treeNode = create_empty_node("<=");
+					return LESSTHANOREQUAL;
 				}
-">="				{
+">="			{
+					yylval.treeNode = create_empty_node(">=");
+					return GREATERTHANOREQUAL;
 				}
-"!="				{
-					}	
+"!="			{
+					yylval.treeNode = create_empty_node("!=");
+					return NOTEQUAL;
+				}	
 AND				{
-					}	
+					yylval.treeNode = create_empty_node("and");
+					return LOGICAL_AND;
+				}	
 OR				{
+					yylval.treeNode = create_empty_node("or");
+					return LOGICAL_OR;
 				}
-NOT			{
+NOT				{
+					yylval.treeNode = create_empty_node("not");
+					return LOGICAL_NOT;
 				}
 
 {digit}+		{ 	
@@ -107,15 +130,23 @@ NOT			{
 								if(wflag == 1){
 									datavalue v;
 									v.integer= 0;
-									symbltblentry* entr = add_entry(manager.array[0],strdup(yytext),curr_datatype,v);
+									symbltblentry* entr = add_entry(symbltbl,strdup(yytext),curr_datatype,v);
 									yylval.entry = entr;
 								}else{
-									symbltblentry* entr = get_entry(manager.array[0],strdup(yytext));
+									symbltblentry* entr = get_entry(symbltbl,strdup(yytext));
 									yylval.entry = entr;
 								}
 								return VAR;
 							}
-[-+*/=()><;,\{\}\[\]\%]         {
+[-+*/=()><;,\{\}\[\]\%]     {
+						if(*yytext == '{'){
+							symbltbl = create_symbtbl(64,hashvalue_of_key,0);
+							push_back(&manager,symbltbl);
+						}
+						if(stm_stack.sp != 0 && *yytext == '}'){
+							pop_stmt(&stm_stack);
+							pop_back(&manager);
+						}
 						return *yytext;
 				}			
 \n                  {
