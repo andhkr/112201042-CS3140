@@ -7,6 +7,7 @@ typedef struct node{
     char* label;
     datatype     type;
     datavalue    exp_value;
+    opeartions   op;
     symbltblentry* entry;
     struct node* ptr_children_list;
     struct node* ptr_sibling;

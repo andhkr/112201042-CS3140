@@ -39,6 +39,7 @@ void pop_back(symbtbl_manager *manager) {
     exit(EXIT_FAILURE);
   }
   --(manager->size);
+  // free_symbol_table(manager->array[manager->size]);
   symbltbl = manager->array[manager->size-1];
 }
 

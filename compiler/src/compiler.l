@@ -46,7 +46,7 @@ boolean			{;
 					return T_BOOL;	
 				}
 
-begindecl		{
+decl		{
 					wflag = 1;
 					// node* decl = create_empty_node();
 					// decl->label = strdup("DECL");
@@ -60,14 +60,14 @@ enddecl			{
 					wflag = 0;
 					return ENDDECL;
 				}
-
+begin           {}
+end             {}
 true           {	yylval.b_var = true;
 					return T;
 				}
 false           {	yylval.b_var = false;
 					return F;
 				}
-
 if				{
 					yylval.treeNode = create_empty_node("if");
 					push_stmt(&stm_stack,IF_STMT);
@@ -122,6 +122,9 @@ NOT				{
 					return LOGICAL_NOT;
 				}
 
+break          	{	yylval.treeNode = create_empty_node("break");
+					return BREAK_Y;
+				}
 {digit}+		{ 	
 					yylval.var = atoi(yytext);
 					return NUM;
@@ -143,7 +146,7 @@ NOT				{
 							symbltbl = create_symbtbl(64,hashvalue_of_key,0);
 							push_back(&manager,symbltbl);
 						}
-						if(stm_stack.sp != 0 && *yytext == '}'){
+						else if(stm_stack.sp != 0 && *yytext == '}'){
 							pop_stmt(&stm_stack);
 							pop_back(&manager);
 						}

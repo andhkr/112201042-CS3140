@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "datatypes.h"
-#include "stack.h"
 
 extern int clen_for_var;
 extern int clen_for_type;

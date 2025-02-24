@@ -17,12 +17,22 @@ bool neg_type_check(node *right) {
   return true;
 }
 
+int array_index(node* treenode){
+  int index = 0;
+  node* right = treenode->ptr_children_list->ptr_sibling;
+  if(right->entry){
+      index = right->entry->value.integer;
+  }else index = right->exp_value.integer;
+  return index;
+}
+
 void change_to_var(node* treenode){
   if(treenode){
     switch(treenode->type){
       case INTARRAY:
-        int val = treenode->entry->value.intarr.ptr[treenode->exp_value.integer];
-        update_data(&treenode->exp_value,&val,sizeof(int));
+        int* arr = treenode->entry->value.intarr.ptr;
+        int index = array_index(treenode);
+        update_data(&treenode->exp_value,arr+index,sizeof(int));
         treenode->type = INT;
         break;
       default:

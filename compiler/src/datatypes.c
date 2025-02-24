@@ -134,7 +134,7 @@ void neg_float(datavalue *d1, datavalue *result) {
 }
 
 void neg_int(datavalue *d1, datavalue *result) {
-  int final = -d1->integer;
+  int final = -(d1->integer);
   update_data(result, &final, sizeof(int));
 }
 
@@ -145,3 +145,17 @@ void neg_char(datavalue *d1, datavalue *result) {
 
 void (*neg[])(datavalue *, datavalue *) = {
     [INT] neg_int, [CHAR] neg_char, [FLOAT] neg_float, [DOUBLE] neg_double};
+
+char* operations_name[]={
+  [PLUS] "PLUS",
+  [SUB]  "SUB",
+  [MUL] "MUL",
+  [DIV] "DIV",
+  [ASSIGN] "ASSIGN",
+  [U_MINUS] "U_MINUS",
+  [GREATERTHAN] ">",
+  [LESSTHAN] "<",
+  [LESST_EQUAL] "<=",
+  [EQUAL_EQUAL] "==",
+  [FUN_CALL] "CALL"
+};

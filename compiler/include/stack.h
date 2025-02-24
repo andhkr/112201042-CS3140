@@ -3,6 +3,7 @@
 
 #include "include/datatypes.h"
 #include <stdlib.h>
+#include "ast.h"
 
 typedef struct data{
     statements stmt;

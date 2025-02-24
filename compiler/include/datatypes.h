@@ -147,7 +147,9 @@ typedef enum {
     Logical_NOT,
     Logical_AND,
     Logical_OR,
-    FUN_CALL
+    FUN_CALL,
+    ARRAY_ACCESS,
+    BREAK
 }opeartions;
 
 typedef enum {
@@ -157,5 +159,9 @@ typedef enum {
     FOR_STMT
 }statements;
 
+
 extern statements curr_statement;
+
+extern char* operations_name[];
+
 #endif

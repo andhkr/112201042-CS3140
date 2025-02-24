@@ -3,6 +3,8 @@
 
 #include "ast.h"
 #include "math.h"
+int array_index(node* treenode);
+void is_Array(node* left,node* right);
 
 bool type_checking(node* left,node* right);
 

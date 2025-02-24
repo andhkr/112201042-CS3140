@@ -69,10 +69,12 @@ extern int yydebug;
     GREATERTHANOREQUAL = 270,      /* GREATERTHANOREQUAL  */
     NOTEQUAL = 271,                /* NOTEQUAL  */
     FOR = 272,                     /* FOR  */
-    VAR = 273,                     /* VAR  */
-    NUM = 274,                     /* NUM  */
-    T = 275,                       /* T  */
-    F = 276                        /* F  */
+    BREAK_Y = 273,                 /* BREAK_Y  */
+    VAR = 274,                     /* VAR  */
+    NUM = 275,                     /* NUM  */
+    T = 276,                       /* T  */
+    F = 277,                       /* F  */
+    LOWER_THAN_IF = 278            /* LOWER_THAN_IF  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -96,23 +98,25 @@ extern int yydebug;
 #define GREATERTHANOREQUAL 270
 #define NOTEQUAL 271
 #define FOR 272
-#define VAR 273
-#define NUM 274
-#define T 275
-#define F 276
+#define BREAK_Y 273
+#define VAR 274
+#define NUM 275
+#define T 276
+#define F 277
+#define LOWER_THAN_IF 278
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "src/compiler.y"
+#line 37 "src/compiler.y"
 
 	int var;
 	bool b_var;
 	node*  treeNode;
 	symbltblentry* entry;
 
-#line 116 "src/y.tab.h"
+#line 120 "src/y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

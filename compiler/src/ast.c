@@ -1,4 +1,7 @@
 #include "include/semantic.h"
+#include "include/stack.h"
+#include <setjmp.h>
+extern jmp_buf buf;
 
 void *safe_malloc(size_t size) {
   void *ptr = malloc(size);
@@ -12,13 +15,16 @@ void *safe_malloc(size_t size) {
 void init_node(node *new_node, symbltblentry *entry, node *left, node *right,
                char *label) {
   new_node->entry = entry;
+  if(left){
   new_node->ptr_children_list = left;
   left->ptr_sibling = right;
+  }else new_node->ptr_children_list = right;
   new_node->label = label;
 }
 
 node *create_empty_node(char *label) {
   node *new_node = (node *)safe_alloc(1, sizeof(node));
+  new_node->op = -1;
   if (strlen(label) != 0)
     new_node->label = strdup(label);
   return new_node;
@@ -52,25 +58,29 @@ void (*stmts[])(bool*) = {
 void op_Add(node* new_node,symbltblentry *entry, node *left, node *right){
   type_checking(left, right);
   Add(new_node, left, right);
-  init_node(new_node, entry, left, right, "PLUS");
+  init_node(new_node, entry, left, right,operations_name[PLUS]);
+  new_node->op = PLUS;
 }
 
 void op_Sub(node* new_node,symbltblentry *entry, node *left, node *right){
   type_checking(left, right);
   Sub(new_node, left, right);
-  init_node(new_node, entry, left, right, "SUB");
+  init_node(new_node, entry, left, right, operations_name[SUB]);
+  new_node->op = SUB;
 }
 
 void op_Mul(node* new_node,symbltblentry *entry, node *left, node *right){
   type_checking(left, right);
   Mul(new_node, left, right);
-  init_node(new_node, entry, left, right, "MUL");
+  init_node(new_node, entry, left, right, operations_name[MUL]);
+  new_node->op = MUL;
 }
 
 void op_Div(node* new_node,symbltblentry *entry, node *left, node *right){
   type_checking(left, right);
   Div(new_node, left, right);
-  init_node(new_node, entry, left, right, "DIV");
+  init_node(new_node, entry, left, right, operations_name[DIV]);
+  new_node->op = DIV;
 }
 
 void op_Percent(node* new_node,symbltblentry *entry, node *left, node *right){
@@ -79,65 +89,86 @@ void op_Percent(node* new_node,symbltblentry *entry, node *left, node *right){
 
 void op_Uminus(node* new_node,symbltblentry *entry, node *left, node *right){
   neg_type_check(right);
-  neg[right->type](&new_node->exp_value, &right->exp_value);
-  init_node(new_node, entry, left, right, "UMINUS");
+  neg[right->type](&right->exp_value,&new_node->exp_value);
+  init_node(new_node, entry, left, right, operations_name[U_MINUS]);
+  new_node->op = U_MINUS;
 }
 
 void op_Assign(node* new_node,symbltblentry *entry, node *left, node *right){
   type_checking(left, right);
-  init_node(new_node, entry, left, right, "ASSIGN");
+  init_node(new_node, entry, left, right, operations_name[ASSIGN]);
+  new_node->op = ASSIGN;
   switch (left->type) {
   case INTARRAY:
     intarray iarray = left->entry->value.intarr;
-    int index = left->exp_value.integer;
+    int index = 0;
+    node* arr_ind = left->ptr_children_list->ptr_sibling;
+    if(arr_ind->entry){
+      index = arr_ind->entry->value.integer;
+    }else index = arr_ind->exp_value.integer;
+
     if (index >= iarray.capacity) {
       fprintf(stderr, "error:index out of bounds\n");
       exit(EXIT_FAILURE);
     }
-    if(stm_stack.sp == 0 || stm_stack.cond_val){
+    if(stm_stack.sp == 0 || (stm_stack.cond_val && (stm_stack.array[stm_stack.sp-1].stmt != FOR_STMT)) ){
     iarray.ptr[index] = right->exp_value.integer;
     }
 
     break;
   case DOUBLEARRAY:
     doublearray darray = left->entry->value.dblarr;
-    index = left->exp_value.integer;
+     arr_ind = left->ptr_children_list->ptr_sibling;
+    if(arr_ind->entry){
+      index = arr_ind->entry->value.integer;
+    }else index = arr_ind->exp_value.integer;
     if (index >= darray.capacity) {
       fprintf(stderr, "error:index out of bounds\n");
       exit(EXIT_FAILURE);
     }
-    if(stm_stack.sp == 0 || stm_stack.cond_val)
+    if(stm_stack.sp == 0 || (stm_stack.cond_val && (stm_stack.array[stm_stack.sp-1].stmt != FOR_STMT)) )
     darray.ptr[index] = right->exp_value.ldecimal;
     break;
   case CHARARRAY:
     chararray carray = left->entry->value.chararr;
-    index = left->exp_value.integer;
+    arr_ind = left->ptr_children_list->ptr_sibling;
+    if(arr_ind->entry){
+      index = arr_ind->entry->value.integer;
+    }else index = arr_ind->exp_value.integer;
+
     if (index >= carray.capacity) {
       fprintf(stderr, "error:index out of bounds\n");
       exit(EXIT_FAILURE);
     }
-    if(stm_stack.sp == 0 || stm_stack.cond_val)
+    if(stm_stack.sp == 0 || (stm_stack.cond_val && (stm_stack.array[stm_stack.sp-1].stmt != FOR_STMT)) )
     carray.ptr[index] = right->exp_value.character;
     break;
   case STRINGARRAY:
     stringarray sarray = left->entry->value.strarr;
-    index = left->exp_value.integer;
+    arr_ind = left->ptr_children_list->ptr_sibling;
+    if(arr_ind->entry){
+      index = arr_ind->entry->value.integer;
+    }else index = arr_ind->exp_value.integer;
+
     if (index >= sarray.capacity) {
       fprintf(stderr, "error:index out of bounds\n");
       exit(EXIT_FAILURE);
     }
-    if(stm_stack.sp == 0 || stm_stack.cond_val)
+    if(stm_stack.sp == 0 || (stm_stack.cond_val && (stm_stack.array[stm_stack.sp-1].stmt != FOR_STMT)) )
     sarray.ptr[index] = right->exp_value.string;
     break;
   default:
-  if(stm_stack.sp == 0 || stm_stack.cond_val)
-    update_data(&left->entry->value, &right->exp_value,
-                datasize[left->entry->type]);
+    if(stm_stack.sp == 0 || (stm_stack.cond_val && (stm_stack.array[stm_stack.sp-1].stmt != FOR_STMT)) ){
+      is_Array(right,NULL);
+      update_data(&left->entry->value, &right->exp_value,
+                  datasize[left->entry->type]);
+      }
   }
 }
 
 void op_FunCall(node* new_node,symbltblentry *entry, node *left, node *right){
-  init_node(new_node, entry, left, right, "CALL");
+  init_node(new_node, entry, left, right, operations_name[FUN_CALL]);
+  new_node->op = FUN_CALL;
 }
 
 void op_isEqual(node* new_node,symbltblentry *entry, node *left, node *right){
@@ -152,7 +183,8 @@ void op_isEqual(node* new_node,symbltblentry *entry, node *left, node *right){
   stmts[stm_stack.array[(stm_stack.sp-1)].stmt](&result);
   stm_stack.array[(stm_stack.sp-1)].cond_val = result;
   stm_stack.cond_val = result;
-  init_node(new_node,entry,left,right,"==");
+  init_node(new_node, entry, left, right, operations_name[EQUAL_EQUAL]);
+  new_node->op = EQUAL_EQUAL;
 }
 
 void op_isLessthan(node* new_node,symbltblentry *entry, node *left, node *right){
@@ -167,11 +199,162 @@ void op_isLessthan(node* new_node,symbltblentry *entry, node *left, node *right)
   stmts[stm_stack.array[(stm_stack.sp-1)].stmt](&result);
   stm_stack.array[(stm_stack.sp-1)].cond_val = result;
   stm_stack.cond_val = result;
-  init_node(new_node,entry,left,right,"<");
+  init_node(new_node, entry, left, right, operations_name[LESSTHAN]);
+  new_node->op = LESSTHAN;
+}
+void interprete(node* tree_node);
+
+datavalue array_access(node* tree_node){
+  datavalue d;
+  switch(tree_node->type){
+    case INT:
+      int* arr = tree_node->entry->value.intarr.ptr;
+      d.integer = arr[array_index(tree_node)];
+      break;
+    default:
+      break;
+  }
+  return d;
+}
+
+datavalue solve_expr(node* tree_node){
+  datavalue result;
+  datavalue left;
+  datavalue right;
+  switch(tree_node->op){
+    case PLUS:
+        left = solve_expr(tree_node->ptr_children_list);
+        right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+        add[tree_node->type](&left,&right,&result);
+        break;
+    case SUB:
+        left = solve_expr(tree_node->ptr_children_list);
+        right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+        sub[tree_node->type](&left,&right,&result);
+        break;
+    case MUL:
+        left = solve_expr(tree_node->ptr_children_list);
+        right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+        mul[tree_node->type](&left,&right,&result);
+        break;
+    case DIV:
+        left = solve_expr(tree_node->ptr_children_list);
+        right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+        divide[tree_node->type](&left,&right,&result);
+        break;
+    case LESSTHAN:
+        left = solve_expr(tree_node->ptr_children_list);
+        right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+        result.boolean = false;
+        if(left.integer < right.integer) result.boolean = true;
+        break;
+    case U_MINUS:
+        return tree_node->exp_value;
+    default:
+        if(strcmp(tree_node->label,"ArrayAccess")==0){
+          result =  array_access(tree_node);
+        }else if(tree_node->entry){
+          result =  tree_node->entry->value;
+        }else
+        result = tree_node->exp_value;
+  }
+  tree_node->exp_value = result;
+  return result;
+}
+
+void solve_assign(node* tree_node){
+  node* l_value = tree_node->ptr_children_list;
+  node* r_value = l_value->ptr_sibling;
+  datavalue value = solve_expr(r_value);
+  if(strcmp(l_value->label,"ArrayAccess")==0){
+    switch(l_value->type){
+      case INTARRAY:
+        int* arr = l_value->entry->value.intarr.ptr;
+        int index = array_index(l_value);
+        arr[index] = value.integer;
+      default:
+        break;
+    }
+  }else{
+    l_value->entry->value = value;
+  }
+  l_value->exp_value = value;
+}
+
+struct symbtbl_manager;
+extern struct symbtbl_manager manager;
+void pop_back(struct symbtbl_manager*);
+void push_back(struct symbtbl_manager* manager,symbol_table* symbtbl);
+
+void interprete(node* tree_node){
+  if(tree_node == NULL) return;
+
+  if(strcmp(tree_node->label,"for") == 0){
+    node* assignment = tree_node->ptr_children_list;
+    node* condition = assignment->ptr_sibling;
+    node* iterator  = condition->ptr_sibling;
+    node* body      = iterator->ptr_sibling;
+    if(assignment->ptr_children_list){
+      solve_assign(assignment->ptr_children_list);
+    }
+    symbltbl = create_symbtbl(64,hashvalue_of_key,0);
+    push_back(&manager,symbltbl);
+    while((solve_expr(condition->ptr_children_list).boolean)){
+      node* for_body = body->ptr_children_list;
+      while(for_body){
+        interprete(for_body);
+        for_body = for_body->ptr_sibling;
+      }
+      if(iterator->ptr_children_list){
+        solve_assign(iterator->ptr_children_list);
+      }
+    }
+    pop_back(&manager);
+  }else if(strcmp(tree_node->label,"if")==0){
+    node* if_condition = tree_node->ptr_children_list;
+    node* if_body      = if_condition->ptr_sibling;
+    tree_node->exp_value.boolean = false;
+    if(solve_expr(if_condition->ptr_children_list).boolean){
+      
+      symbltbl = create_symbtbl(64,hashvalue_of_key,0);
+      push_back(&manager,symbltbl);
+      node* stmts_in_if_body = if_body->ptr_children_list;
+      while(stmts_in_if_body){
+        interprete(stmts_in_if_body);
+        stmts_in_if_body = stmts_in_if_body->ptr_sibling;
+      }
+      pop_back(&manager);
+      tree_node->exp_value.boolean = true;
+    }
+  }else if(strcmp(tree_node->label,"branch")==0){
+    interprete(tree_node->ptr_children_list);
+    printf("%d\n",tree_node->exp_value.boolean);
+    if(!(tree_node->ptr_children_list->exp_value.boolean)){
+      interprete(tree_node->ptr_children_list->ptr_sibling);
+    }
+  }else if(strcmp(tree_node->label,"else")==0){
+      push_back(&manager,symbltbl);
+      node* else_body = tree_node->ptr_children_list;
+      node* stmts_in_else_body = else_body->ptr_children_list;
+      while(stmts_in_else_body){
+        interprete(stmts_in_else_body);
+        stmts_in_else_body = stmts_in_else_body->ptr_sibling;
+      }
+      pop_back(&manager);
+  }else if(strcmp(tree_node->label,"ASSIGN")==0){
+    solve_assign(tree_node);
+  }else if(strcmp(tree_node->label,"break")==0) {
+    longjmp(buf,1);
+  }
+}
+
+void op_break(node* treenode,symbltblentry* entry,node* left,node* right){
+  
 }
 
 void for_loop(node* tree_node){
-  
+  /*execution*/
+  interprete(tree_node);
 }
 void (*operator[])(node*,symbltblentry*, node*, node*)={
   [PLUS] op_Add,
@@ -184,6 +367,7 @@ void (*operator[])(node*,symbltblentry*, node*, node*)={
   [LESSTHAN] op_isLessthan,
   [EQUAL_EQUAL] op_isEqual,
   [FUN_CALL] op_FunCall,
+  [BREAK] op_break
 };
 
 node *create_node_ast(opeartions op, symbltblentry *entry, node *left, node *right) {

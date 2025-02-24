@@ -13,7 +13,7 @@ objs  = $(cfiles:.c=.o)
 all : $(BIN)/compiler
 
 $(SRC)/y.tab.c $(SRC)/y.tab.h : $(yaccfile)
-	yacc -d -o $(SRC)/y.tab.c $<
+	yacc -v -d -o $(SRC)/y.tab.c $<
 
 $(SRC)/lex.yy.c : $(lexfile) $(SRC)/y.tab.h
 	lex -o $@ $<
@@ -22,7 +22,7 @@ $(SRC)/%.o : $(SRC)/%.c
 	gcc $(CFLAGS) -c $< -o $@
 
 $(BIN)/compiler:$(objs)
-	gcc -g -o $@ $^ -lm
+	gcc -g -o $@ $^ -lm -DYYERROR_VERBOSE
 
 clean:
 	rm -f $(SRC)/*.o $(SRC)/y.tab.c $(SRC)/y.tab.h $(SRC)/lex.yy.c $(BIN)/basic

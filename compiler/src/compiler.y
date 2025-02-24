@@ -22,12 +22,16 @@
 	#include <assert.h>
 	#include <string.h>
 	#include <stdbool.h>
-
+	#include <setjmp.h>
+	#include "include/stack.h"
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
 	extern int wflag;
 	int i;
+	bool is_break=false;
+	jmp_buf buf;
+	#define YYERROR_VERBOSE
 %}
 
 %union{
@@ -41,14 +45,14 @@
 %token <treeNode> IF ELSE
 %token <treeNode> LOGICAL_AND LOGICAL_NOT LOGICAL_OR
 %token <treeNode> EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
-%token <treeNode> FOR
+%token <treeNode> FOR BREAK_Y 
 %token <entry> VAR
 %token <var> NUM 
 %token <b_var> T F
 
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
 %type <treeNode> ret_type Gid var_expr str_expr Glist 
-%type <treeNode> cond_stmt stmt_list
+%type <treeNode> cond_stmt stmt_list statement control_stmt
 
 %right '='
 %left '<' '>'
@@ -57,8 +61,11 @@
 %left '*' '/'
 %left '%'
 %left LOGICAL_AND LOGICAL_OR
-%left LOGICAL_NOT
+%left LOGICAL_NOT 
+%nonassoc LOWER_THAN_IF
+%nonassoc IF	
 %left ELSE
+
 
 // %token BEG END
 // %token IF THEN ELSE ENDIF
@@ -96,7 +103,7 @@
 								$1->ptr_sibling = $3;
 								$$ = $1;
 							}
-		|	func ',' Glist
+		|	func ',' Glist {}
 		;
 	
 	Gid	:	VAR		{ 
@@ -136,22 +143,28 @@
 		|	VAR ',' var_list { 	}
 		;		
 
-	stmt_list:	/* NULL */		{  ;}
-		|	statement stmt_list	{						}
+	stmt_list:	/* NULL */		{$$ = NULL;}
+		|	statement stmt_list	{$1->ptr_sibling = $2;}
 		|	error ';' 		{fprintf(stderr,"Error : Syntax Error\n");}
 		;
 
 	statement:	assign_stmt  ';' { /*print asignment syntax tree*/
-								if(stm_stack.sp == 0)
-									graph($1);
-									
+									if(stm_stack.sp == 0)
+										graph($1);
+									$$ = $1;
+								
 								}
 		|	write_stmt ';'		 {/*print write syntax tree*/
-									graph($1);
+									if(stm_stack.sp == 0)
+										graph($1);
+									$$ = $1;
 								}
 		|	cond_stmt 			{/*print cond_stmt syntax tree*/
-									graph($1);
+									if(stm_stack.sp == 0 || (stm_stack.sp == 1 && strcmp($1->label,"if")==0))
+										graph($1);
+									$$ = $1;
 								}
+		|   control_stmt ';' {$$ = $1;}
 		;
 
 	write_stmt:	WRITE '(' expr ')' 	{
@@ -160,34 +173,63 @@
 		 | WRITE '(''"' str_expr '"'')'      { /*unable to understand*/;}
 		;
 	
-	assign_stmt:	var_expr '=' expr  	{ 	
-											$$ = create_node_ast(ASSIGN,NULL,$1,$3);		
+	assign_stmt:/*NULL*/ {$$=NULL;}
+	|var_expr '=' expr  		{ 	
+											$$ = create_node_ast(ASSIGN,NULL,$1,$3);	
 										}
 		;
-	cond_stmt:	IF expr '{' stmt_list '}' 	{	
-												$1->ptr_children_list = $2;
-												$2->ptr_sibling = $4;
+	cond_stmt:	IF expr '{' stmt_list '}'{	
+												node* cond = create_empty_node("if_condition");
+												node* body = create_empty_node("if_body");
+												$1->ptr_children_list = cond;
+												cond->ptr_children_list = $2;
+												cond->ptr_sibling = body;
+												body->ptr_children_list = $4;
 												$$ = $1;
-											}
+										}
 		|	IF expr '{' stmt_list '}'ELSE '{'stmt_list '}' 	{ 
 																node* branch = create_empty_node("branch");
+																node* cond = create_empty_node("if_condition");
+																node* body = create_empty_node("if_body");
+																node* else_body = create_empty_node("else_body");
 																branch->ptr_children_list = $1;
-																$1->ptr_children_list = $2;
-																$2->ptr_sibling = $4;
+																$1->ptr_children_list = cond;
+																cond->ptr_children_list = $2;
+																cond->ptr_sibling = body;
+																body->ptr_children_list = $4;
 																$1->ptr_sibling = $6;
-																$6->ptr_children_list = $8;
+																$6->ptr_children_list = else_body;
+																else_body->ptr_children_list = $8;
 																$$ = branch;
 															}
 	    |    FOR '(' assign_stmt  ';'  expr ';'  assign_stmt ')' '{' stmt_list '}'	{ 
-																						$1->ptr_children_list = $3;
-																						$3->ptr_sibling = $5;
-																						$5->ptr_sibling = $7;
-																						$7->ptr_sibling = $10;
-																						for_loop($1);
+																						// $1->ptr_children_list = $3;
+																						node* asgn_stmt = create_empty_node("assign_stmt");
+																						node* cond_stmt = create_empty_node("condition");
+																						node* iterate   = create_empty_node("iterator");
+																						node* body      = create_empty_node("body");
+																						// $3->asgn_stmt->ptr_children_list = 
+																						$1->ptr_children_list = asgn_stmt;
+																						asgn_stmt->ptr_children_list = $3;
+																						asgn_stmt->ptr_sibling = cond_stmt;
+																						cond_stmt->ptr_children_list = $5;
+																						cond_stmt->ptr_sibling = iterate;
+																						iterate->ptr_children_list = $7;
+																						iterate->ptr_sibling = body;
+																						body->ptr_children_list = $10;
+																						if(is_break){
+																							if(setjmp(buf)==0){;
+																								for_loop($1);
+																							}
+																						}else {
+																							if(!is_break)
+																							for_loop($1);
+																						}
 																						$$ = $1;
 		                                                							}
 		;
-
+	control_stmt: BREAK_Y     {is_break = true;$$ = $1;}
+	;
 	expr	:	NUM 		{
 								char word[13];
 								snprintf(word,sizeof(word),"%d",$1);
@@ -262,8 +304,13 @@
 		|	var_expr '[' expr ']'	{
 										char* label = "ArrayAccess";
 										$1->label = strdup(label);
-										update_data(&$1->exp_value,&$3->exp_value.integer,sizeof(int));
-										make_node($1);
+										node* index = create_empty_node("index");
+										index->exp_value.integer = $3->exp_value.integer;
+										index->entry = $3->entry;
+										// make_node($1);
+										node* left = create_empty_node($1->entry->name);
+										$1->ptr_children_list = left;
+										left->ptr_sibling = index;
 										$1->type = $1->entry->type;
 										$$ = $1;
 									} 
