@@ -152,6 +152,120 @@ typedef enum {
     BREAK
 }opeartions;
 
+/*less than*/
+void lessthan_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessthan_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessthan_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessthan_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* lessthanision function pointers */
+extern void (*lessthanops[])(datavalue*,datavalue*,datavalue*);
+
+/*greaterthan than*/
+void greaterthan_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greaterthan_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greaterthan_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greaterthan_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* greaterthanision function pointers */
+extern void (*greaterthanops[])(datavalue*,datavalue*,datavalue*);
+
+/*greaterthaneq than*/
+void greatteq_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greatteq_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greatteq_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void greatteq_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* greatteqision function pointers */
+extern void (*greatteqops[])(datavalue*,datavalue*,datavalue*);
+
+/*lessthaneq than*/
+void lessteq_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessteq_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessteq_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void lessteq_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* lessteqision function pointers */
+extern void (*lessteqops[])(datavalue*,datavalue*,datavalue*);
+
+/*noteq than*/
+void noteq_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void noteq_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void noteq_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void noteq_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* noteqision function pointers */
+extern void (*noteqops[])(datavalue*,datavalue*,datavalue*);
+
+/*iseq than*/
+void isequal_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void isequal_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void isequal_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void isequal_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* isequalision function pointers */
+extern void (*isequalops[])(datavalue*,datavalue*,datavalue*);
+
+/*not than*/
+void logNot_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logNot_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logNot_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logNot_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logNot_bool(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* logNotision function pointers */
+extern void (*logNotops[])(datavalue*,datavalue*,datavalue*);
+
+/*and than*/
+void logAnd_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logAnd_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logAnd_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logAnd_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logAnd_bool(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* logAndision function pointers */
+extern void (*logAndops[])(datavalue*,datavalue*,datavalue*);
+
+/*or than*/
+void logOr_double(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logOr_float(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logOr_int(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logOr_char(datavalue* d1,datavalue* d2,datavalue* result);
+
+void logOr_bool(datavalue* d1,datavalue* d2,datavalue* result);
+
+/* logOrision function pointers */
+extern void (*logOrops[])(datavalue*,datavalue*,datavalue*);
+
 typedef enum {
     IF_STMT,
     ELSE_IF_STMT,

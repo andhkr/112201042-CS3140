@@ -272,21 +272,35 @@
 									$$ = create_node_ast(DIV,NULL,$1,$3);
 								}
 		|	expr '%' expr 		{   
-															
+									$$ = create_node_ast(PERCENT,NULL,$1,$3);				
 								}
 		|	expr '<' expr		{
 									$$ = create_node_ast(LESSTHAN,NULL,$1,$3);
 		 						}
-		|	expr '>' expr		{ 						}
-		|	expr GREATERTHANOREQUAL expr				{ 						}
-		|	expr LESSTHANOREQUAL expr	{  						}
-		|	expr NOTEQUAL expr			{ 						}
+		|	expr '>' expr		{
+									$$ = create_node_ast(GREATERTHAN,NULL,$1,$3);
+		 						}
+		|	expr GREATERTHANOREQUAL expr{
+									$$ = create_node_ast(GREATT_EQUAL,NULL,$1,$3);
+		 						}
+		|	expr LESSTHANOREQUAL expr	{
+									$$ = create_node_ast(LESST_EQUAL,NULL,$1,$3);
+		  						}
+		|	expr NOTEQUAL expr			{
+									$$ = create_node_ast(NOT_EQAUL,NULL,$1,$3);
+		 						}	
 		|	expr EQUALEQUAL expr	{
 										$$ = create_node_ast(EQUAL_EQUAL,NULL,$1,$3);
 		 							}
-		|	LOGICAL_NOT expr	{ 						}
-		|	expr LOGICAL_AND expr	{ 						}
-		|	expr LOGICAL_OR expr	{}
+		|	LOGICAL_NOT expr	{
+			 							$$ = create_node_ast(Logical_NOT,NULL,$2,NULL);	 			
+					}
+		|	expr LOGICAL_AND expr	{ 
+										$$	= 	create_node_ast(Logical_AND,NULL,$2,NULL);	
+				}
+		|	expr LOGICAL_OR expr	{
+										$$	= 	create_node_ast(Logical_OR,NULL,$2,NULL);
+		}
 		;
 	str_expr :  VAR {		node* var_node = create_empty_node($1->name);
 							var_node->entry = $1;

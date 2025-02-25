@@ -60,10 +60,6 @@
         |-----|
         v     v
        arr  index
-0
-0
-0
-0
 
                                                                for
                                                                 |
@@ -118,10 +114,10 @@ Symbol Table:
 | variable   | type       | value      |
 +------------+------------+------------+
 | key        | int        | 15         |
-| mid        | int        | 1          |
-| result     | int        | 0          |
+| mid        | int        | 5          |
+| result     | int        | 5          |
 | i          | int        | 10         |
-| l          | int        | 0          |
+| l          | int        | 5          |
 | arr        | int array  | 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 , |
-| r          | int        | 0          |
+| r          | int        | 6          |
 +------------+------------+------------+

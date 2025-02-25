@@ -2,7 +2,7 @@
 
 #include "include/ast.h"
 
-symbol_table* symbltbl = NULL;
+symbol_table *symbltbl = NULL;
 
 bool is_prime(long n) {
   /*skipping the multiple of 2 and 3*/

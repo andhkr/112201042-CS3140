@@ -40,17 +40,18 @@ void pop_back(symbtbl_manager *manager) {
   }
   --(manager->size);
   // free_symbol_table(manager->array[manager->size]);
-  symbltbl = manager->array[manager->size-1];
+  symbltbl = manager->array[manager->size - 1];
 }
 
-symbltblentry* get_entry(symbol_table *symbtbl, char *name){
-  symbltblentry* entry=NULL;
-  for(int i = manager.size - 1;i>=0;--i){
-    entry = find_entry(manager.array[i],name);
-    if(entry) break;
+symbltblentry *get_entry(symbol_table *symbtbl, char *name) {
+  symbltblentry *entry = NULL;
+  for (int i = manager.size - 1; i >= 0; --i) {
+    entry = find_entry(manager.array[i], name);
+    if (entry)
+      break;
   }
-  if(entry == NULL){
-    fprintf(stderr,"error:variable %s not declared\n",name);
+  if (entry == NULL) {
+    fprintf(stderr, "error:variable %s not declared\n", name);
     exit(EXIT_FAILURE);
   }
   return entry;
@@ -160,7 +161,3 @@ void free_symbol_table_manager(symbtbl_manager *manager) {
   free(manager->array);
   manager->array = NULL;
 }
-
-
-
-
