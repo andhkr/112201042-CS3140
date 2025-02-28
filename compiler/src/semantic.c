@@ -35,7 +35,6 @@ void change_to_var(node *treenode) {
       int *arr = treenode->entry->value.intarr.ptr;
       int index = array_index(treenode);
       update_data(&treenode->exp_value, arr + index, sizeof(int));
-      treenode->type = INT;
       break;
     default:
       /*nothing*/
@@ -56,7 +55,7 @@ void Add(node *new_node, node *left, node *right) {
   } else if (left->type == FLOAT || right->type == FLOAT) {
     add[FLOAT](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = FLOAT;
-  } else if (left->type == INT || right->type == INT) {
+  } else if (left->type == INT || right->type == INT || left->type == INTARRAY || right->type == INTARRAY) {
     add[INT](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = INT;
   } else if (left->type == CHAR && right->type == CHAR) {

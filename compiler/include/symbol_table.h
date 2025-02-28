@@ -39,6 +39,7 @@ typedef struct symbol_table{
     int capacity;
     int id;
     bool scope_level_truth;
+    bool* used;
 }symbol_table;
 
 extern symbol_table* symbltbl;

@@ -39,4 +39,5 @@ void pop_stmt(stmt_stack *stack) {
   prev_stmt = stack->array[stack->sp];
   stack->cond_val =
       ((stack->sp != 0) ? (stack->array[(stack->sp - 1)].cond_val) : (false));
+      
 }

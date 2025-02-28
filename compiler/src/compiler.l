@@ -46,7 +46,7 @@ boolean			{;
 					return T_BOOL;	
 				}
 
-decl		{
+(decl|begindecl) {
 					wflag = 1;
 					// node* decl = create_empty_node();
 					// decl->label = strdup("DECL");
@@ -60,8 +60,8 @@ enddecl			{
 					wflag = 0;
 					return ENDDECL;
 				}
-begin           {}
-end             {}
+begin           { return BEG;}
+end             { return END;}
 true           {	yylval.b_var = true;
 					return T;
 				}
@@ -73,20 +73,21 @@ if				{
 					push_stmt(&stm_stack,IF_STMT);
 					return IF;
 				}
-then			{
+then            {
+					symbltbl = create_symbtbl(64,hashvalue_of_key,0);
+					push_back(&manager,symbltbl);
+					yylval.var = 0;
+					return THEN;
 				}	
 else			{
 					yylval.treeNode = create_empty_node("else");
-					push_stmt(&stm_stack,ELSE_STMT);
-					bool val = !(symbltbl->scope_level_truth);
-					if(stm_stack.sp >= 2){
-						val = val & stm_stack.array[(stm_stack.sp-1)].cond_val;
-					}
-					stm_stack.array[(stm_stack.sp-1)].cond_val = val;
-					stm_stack.cond_val  =  val;
 					return ELSE;
 				}	
-endif				{
+endif           {
+					pop_stmt(&stm_stack);
+					pop_back(&manager);
+					yylval.var = 1;
+					return ENDIF;
 				}
 for 			{
 					yylval.treeNode = create_empty_node("for");
@@ -142,7 +143,7 @@ break          	{	yylval.treeNode = create_empty_node("break");
 								return VAR;
 							}
 [-+*/=()><;,\{\}\[\]\%]     {
-						if(*yytext == '{'){
+						if(stm_stack.sp != 0 && *yytext == '{'){
 							symbltbl = create_symbtbl(64,hashvalue_of_key,0);
 							push_back(&manager,symbltbl);
 						}

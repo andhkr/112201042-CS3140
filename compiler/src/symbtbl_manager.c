@@ -8,20 +8,22 @@ int row = 30;
 symbtbl_manager manager;
 
 void init_symbtbl_manager(symbtbl_manager *manager) {
-  manager->capacity = 2;
+  manager->capacity = 16;
   manager->size = 0;
-  manager->array = (symbol_table **)safe_alloc(2, sizeof(symbol_table *));
+  manager->array = (symbol_table **)safe_alloc(16, sizeof(symbol_table *));
   manager->current_table = 0;
 }
 
 void allocation(symbtbl_manager *manager) {
-  manager->capacity = (manager->capacity) << 1;
+  int old_size = manager->capacity;
+  manager->capacity = ((manager->capacity) << 1);
   symbol_table **ptr =
-      (symbol_table **)realloc(manager->array, manager->capacity);
+    (symbol_table **)realloc(manager->array, manager->capacity*sizeof(symbltblentry));
   if (ptr == NULL) {
     fprintf(stderr, "Memory reallocation for symbol table manager Failed\n");
     exit(EXIT_FAILURE);
   }
+  memset(ptr+old_size,0,(manager->capacity-old_size));
   manager->array = ptr;
 }
 
@@ -39,8 +41,8 @@ void pop_back(symbtbl_manager *manager) {
     exit(EXIT_FAILURE);
   }
   --(manager->size);
-  // free_symbol_table(manager->array[manager->size]);
-  symbltbl = manager->array[manager->size - 1];
+  free_symbol_table((manager->array[(manager->size)]));
+  symbltbl = manager->array[(manager->size - 1)];
 }
 
 symbltblentry *get_entry(symbol_table *symbtbl, char *name) {
@@ -145,7 +147,7 @@ void free_link_list(symbltblentry *head) {
 void free_symbol_table(symbol_table *symbtbl) {
   symbol_table *curr = symbtbl;
   for (int i = 0; i < curr->capacity; ++i) {
-    if (curr->table[i].name != NULL) {
+    if (curr->used[i]) {
       free_link_list(curr->table[i].next);
     }
   }

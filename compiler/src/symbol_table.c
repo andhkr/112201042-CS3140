@@ -67,6 +67,7 @@ void init_entry(symbltblentry *entry, char *name, datatype type,
   entry->type = type;
   entry->value = value;
   entry->next = NULL;
+  
 }
 
 symbol_table *create_symbtbl(int size, int (*hashvalue_of_key)(char *),
@@ -79,6 +80,10 @@ symbol_table *create_symbtbl(int size, int (*hashvalue_of_key)(char *),
   symbtbl->table = table;
   symbtbl->id = id;
   symbtbl->scope_level_truth = false;
+  symbtbl->used = (bool*) malloc(sizeof(bool)*capacity);
+  for(int i = 0;i<capacity;++i){
+    symbtbl->used[i] = false;
+  }
   return symbtbl;
 }
 
@@ -88,9 +93,10 @@ symbltblentry *add_entry(symbol_table *symbtbl, char *name, datatype type,
   // for table the max lenght of variable to be printed
   clen_for_var = (clen_for_var < strlen(name) ? (strlen(name)) : clen_for_var);
   symbltblentry *entry = NULL;
-  if (symbtbl->table[hashvalue].name == NULL) {
+  if (!symbtbl->used[hashvalue]) {
     init_entry(&symbtbl->table[hashvalue], name, type, value);
     entry = &symbtbl->table[hashvalue];
+    symbtbl->used[hashvalue] = true;
   } else {
     symbltblentry *curr = &symbtbl->table[hashvalue];
     symbltblentry *new_entry = create_node(name, type, value);
@@ -118,7 +124,7 @@ symbltblentry *add_entry(symbol_table *symbtbl, char *name, datatype type,
 
 symbltblentry *find_entry(symbol_table *symbtbl, char *name) {
   int hashvalue = symbtbl->hashvalue_of_key(name) % symbtbl->capacity;
-  if ((symbtbl->table[hashvalue].name) == NULL) {
+  if (!(symbtbl->used[hashvalue])) {
     return NULL;
   } else {
     symbltblentry *curr = &symbtbl->table[hashvalue];
