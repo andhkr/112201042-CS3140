@@ -13,7 +13,9 @@ char *typename[] = {[INT] "int",
                     [CHAR] "char*",
                     [STRING] "char*",
                     [DOUBLE] "double",
-                    [FLOAT] "float"};
+                    [FLOAT] "float",
+                    [BOOL] "boolean"
+              };
 datavalue zero_set = {0};
 
 bool is_zero(datavalue *d) {

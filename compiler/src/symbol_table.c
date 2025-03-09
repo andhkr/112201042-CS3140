@@ -106,13 +106,13 @@ symbltblentry *add_entry(symbol_table *symbtbl, char *name, datatype type,
         prev = curr;
         curr = curr->next;
       } else if (curr->type != type) {
-        fprintf(stderr, "error: confilicting types for '%s';have '%s'\n",
+        fprintf(stderr, "error:line no:%d : confilicting types for '%s';have '%s'\n",Lineno,
                 curr->name, typename[type]);
-        fprintf(stderr, "note:previous defination of '%s' with type '%s'\n",
-                curr->name, typename[type]);
+        fprintf(stderr, "\t\t  note:previous defination of '%s' with type '%s'\n",
+                curr->name, typename[curr->type]);
         exit(EXIT_FAILURE);
       } else {
-        fprintf(stderr, "Error:Redeclaration of Variable %s\n", name);
+        fprintf(stderr, "Error:line no : %d : Redeclaration of Variable %s\n", Lineno,name);
         exit(EXIT_FAILURE);
       }
     }

@@ -137,7 +137,7 @@ typedef enum {
     DIV,
     ASSIGN,
     U_MINUS,
-    PERCENT,
+    MODULO,
     LESSTHAN,
     GREATERTHAN,
     GREATT_EQUAL, /*greater than or equal to */

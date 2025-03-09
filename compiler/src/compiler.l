@@ -16,7 +16,6 @@
  */
 
 %{
-int 	Lineno;
 int     wflag;
 #include "include/ast.h"
 #include "include/symbtbl_manager.h"
@@ -48,14 +47,10 @@ boolean			{;
 
 (decl|begindecl) {
 					wflag = 1;
-					// node* decl = create_empty_node();
-					// decl->label = strdup("DECL");
 					yylval.treeNode = NULL;
 					return DECL;
 				}
 enddecl			{
-					// node* enddecl = create_empty_node();
-					// enddecl->label = "ENDDECL";
 					yylval.treeNode = NULL;
 					wflag = 0;
 					return ENDDECL;
@@ -126,7 +121,7 @@ NOT				{
 break          	{	yylval.treeNode = create_empty_node("break");
 					return BREAK_Y;
 				}
-{digit}+		{ 	
+{digit}+        { 	
 					yylval.var = atoi(yytext);
 					return NUM;
 				}
@@ -154,13 +149,13 @@ break          	{	yylval.treeNode = create_empty_node("break");
 						return *yytext;
 				}			
 \n                  {
-						;
+						Lineno++;
 					}
 [ \t]				{
 	 					;
 					}
 .					{
-						printf("Some new string which not in grammer\n");
+						fprintf(stderr,"Error: line no:%d:new word not in grammer\n",Lineno);
 						exit(EXIT_FAILURE);
 					}		
 

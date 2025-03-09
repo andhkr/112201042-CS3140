@@ -4,8 +4,8 @@ SRC=src
 INCLUDE=include
 BIN=bin
 
-yaccfile = $(SRC)/*.y
-lexfile  = $(SRC)/*.l 
+yaccfile = $(SRC)/compiler.y
+lexfile  = $(SRC)/compiler.l 
 cfiles = $(wildcard $(SRC)/*.c)
 cfiles += $(SRC)/y.tab.c $(SRC)/lex.yy.c
 objs  = $(cfiles:.c=.o)

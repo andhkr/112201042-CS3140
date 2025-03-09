@@ -6,6 +6,7 @@
 #include <string.h>
 #include "datatypes.h"
 
+extern int Lineno;
 extern int clen_for_var;
 extern int clen_for_type;
 extern int clen_for_val;

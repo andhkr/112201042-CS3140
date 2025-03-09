@@ -53,7 +53,7 @@ symbltblentry *get_entry(symbol_table *symbtbl, char *name) {
       break;
   }
   if (entry == NULL) {
-    fprintf(stderr, "error:variable %s not declared\n", name);
+    fprintf(stderr, "error:line no:%d:variable %s not declared\n",Lineno, name);
     exit(EXIT_FAILURE);
   }
   return entry;

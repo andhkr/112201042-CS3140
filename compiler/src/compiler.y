@@ -22,17 +22,14 @@
 	#include <assert.h>
 	#include <string.h>
 	#include <stdbool.h>
-	#include <setjmp.h>
 	#include "include/stack.h"
+	#include "include/interpreter.h"
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
 	extern int wflag;
 	int i;
-	bool is_break=false;
-	jmp_buf buf;
 	#define YYERROR_VERBOSE
-	int interprete(node *tree_node);
 %}
 
 %union{
@@ -134,14 +131,16 @@
 	var_list:	VAR 		 { }
 		|	VAR ',' var_list { 	}
 		;		
-	MainBlock : BEG stmt_list END {
-	}
+	MainBlock : stmt_list {}
+		|BEG stmt_list END {}
+		;
 	stmt_list:	/* NULL */		{$$ = NULL;}
 		|	statement stmt_list	{$1->ptr_sibling = $2;
 									$$ = $1;
 									
 								}
-		|	error ';' 		{fprintf(stderr,"Error : Syntax Error\n");}
+		|	error ';' 		{fprintf(stderr,"Error : line no: %d : Syntax Error\n",Lineno);
+							exit(EXIT_FAILURE);}
 		;
 
 	statement:	assign_stmt  ';' { 
@@ -206,19 +205,6 @@
 																	interprete($1);
 																}
 																$$ = branch;
-																// node* branch = create_empty_node("if_else");
-																// node* cond = create_empty_node("if_condition");
-																// node* body = create_empty_node("if_body");
-																// node* else_body = create_empty_node("else_body");
-
-																// cond->ptr_children_list = $2;
-																// cond->ptr_sibling = body;
-																// body->ptr_children_list = $4;
-																// body->ptr_sibling = else_body;
-																// else_body->ptr_children_list = $6;
-
-																// branch->ptr_children_list = cond;
-																// $$ = branch;
 															}
 	    |    FOR '(' assign_stmt  ';'  expr ';'  assign_stmt ')' '{' stmt_list '}'	{ 
 																						// $1->ptr_children_list = $3;
@@ -285,7 +271,7 @@
 									$$ = create_node_ast(DIV,NULL,$1,$3);
 								}
 		|	expr '%' expr 		{   
-									$$ = create_node_ast(PERCENT,NULL,$1,$3);				
+									$$ = create_node_ast(MODULO,NULL,$1,$3);				
 								}
 		|	expr '<' expr		{
 									$$ = create_node_ast(LESSTHAN,NULL,$1,$3);
@@ -309,10 +295,10 @@
 			 							$$ = create_node_ast(Logical_NOT,NULL,$2,NULL);	 			
 					}
 		|	expr LOGICAL_AND expr	{ 
-										$$	= 	create_node_ast(Logical_AND,NULL,$2,NULL);	
+										$$	= 	create_node_ast(Logical_AND,NULL,$1,$3);	
 				}
 		|	expr LOGICAL_OR expr	{
-										$$	= 	create_node_ast(Logical_OR,NULL,$2,NULL);
+										$$	= 	create_node_ast(Logical_OR,NULL,$1,$3);
 		}
 		;
 	str_expr :  VAR {		node* var_node = create_empty_node($1->name);
@@ -357,7 +343,7 @@ int main(int argc,char** argv){
 	wflag = 1;
 	yyparse();
 	print_symbol_table();
-	// free_symbol_table_manager(&manager);
-	// free_graph();
+	free_symbol_table_manager(&manager);
+	free_graph();
 	return 0;
 }
