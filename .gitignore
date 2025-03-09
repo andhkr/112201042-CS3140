@@ -1,5 +1,8 @@
 # Prerequisites
 *.d
+**/bin/compiler
+**/**.yy.**
+**/**.tab.**
 
 # Compiled Object files
 *.slo

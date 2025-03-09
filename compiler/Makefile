@@ -22,7 +22,8 @@ $(SRC)/%.o : $(SRC)/%.c
 	gcc $(CFLAGS) -c $< -o $@
 
 $(BIN)/compiler:$(objs)
+	mkdir -p ./$(BIN)
 	gcc -g -o $@ $^ -lm
 
 clean:
-	rm -f $(SRC)/*.o $(SRC)/y.tab.c $(SRC)/y.tab.h $(SRC)/lex.yy.c $(BIN)/basic
+	rm -f $(SRC)/*.o $(SRC)/y.tab.c $(SRC)/y.tab.h $(SRC)/lex.yy.c $(BIN)/compiler
