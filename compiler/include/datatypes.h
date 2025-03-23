@@ -16,6 +16,7 @@ typedef enum{
     DOUBLEARRAY,
     CHARARRAY,
     STRINGARRAY,
+    BOOLARRAY,
     ENTRY,
     OP,
     STATEMENT,
@@ -44,6 +45,11 @@ typedef struct stringarray{
     int capacity;
 }stringarray;
 
+typedef struct boolarray{
+    bool* ptr;
+    int capacity;
+}boolarray;
+
 typedef union{
     int integer;
     char character;
@@ -55,6 +61,7 @@ typedef union{
     doublearray dblarr;
     chararray   chararr;
     stringarray strarr;
+    boolarray  boolarr;
     bool boolean;
 }datavalue;
 

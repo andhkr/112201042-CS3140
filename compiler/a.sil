@@ -1,0 +1,32 @@
+decl 
+  integer arr[10];
+  integer key, i;
+  integer l, r, mid, result;
+  boolean barr[10];
+enddecl
+begin
+  for(i = 0; i < 10; i = i + 1){
+    arr[i] = i + 10;
+    barr[i]=true;
+  }
+  l = 0;
+  r = 9;
+
+  key = arr[5];
+  for(; l < r;){
+    
+    mid = (l + r) / 2;
+
+    if (arr[mid] == key) then
+      result = mid;
+      break;
+    else if (arr[mid] < key) then
+        l = mid + 1;
+      else
+        r = mid - 1;
+      endif
+    endif
+  
+  }
+  write(result);
+end

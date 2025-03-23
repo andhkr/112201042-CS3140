@@ -151,6 +151,16 @@ void add_array_to_symbtbl(
     array.capacity = n_ele;
     array.ptr = arr;
     update_data(&var->entry->value.intarr, &array, sizeof(intarray));
+    var->type = INTARRAY;
+    break;
+  case BOOL:
+    bool *barr = (bool *)calloc(n_ele, sizeof(bool));
+    var->entry->type = BOOLARRAY;
+    boolarray barray;
+    barray.capacity = n_ele;
+    barray.ptr = barr;
+    update_data(&var->entry->value.boolarr, &barray, sizeof(boolarray));
+    var->type = BOOLARRAY;
     break;
   default:
     break;

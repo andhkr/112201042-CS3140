@@ -45,6 +45,12 @@ int give_type(node* tree_node){
       update_data(&tree_node->exp_value, darr + index, sizeof(double));
       t = DOUBLE;
       break;
+    case BOOLARRAY:
+      bool *barr = tree_node->entry->value.boolarr.ptr;
+      index = array_index(tree_node);
+      update_data(&tree_node->exp_value, barr + index, sizeof(bool));
+      t = BOOL;
+    break;
     default:
       t = tree_node->type;
   }

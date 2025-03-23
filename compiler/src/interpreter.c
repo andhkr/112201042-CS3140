@@ -89,6 +89,11 @@ void solve_assign(node *tree_node) {
       int *arr = l_value->entry->value.intarr.ptr;
       int index = array_index(l_value);
       arr[index] = value.integer;
+      break;
+    case BOOLARRAY:
+      bool *barr = l_value->entry->value.boolarr.ptr;
+      int bindex = array_index(l_value);
+      barr[bindex] = value.boolean;
     default:
       break;
     }

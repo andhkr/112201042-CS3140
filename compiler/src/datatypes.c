@@ -151,10 +151,10 @@ void (*neg[])(datavalue *, datavalue *) = {
 char *operations_name[] = {
     [PLUS] "PLUS",      [SUB] "SUB",       [MUL] "MUL",
     [DIV] "DIV",        [ASSIGN] "ASSIGN", [U_MINUS] "U_MINUS",
-    [GREATERTHAN] ">",  [LESSTHAN] "<",    [LESST_EQUAL] "<=",
-    [EQUAL_EQUAL] "==", [FUN_CALL] "CALL", [GREATT_EQUAL] ">=",
-    [LESST_EQUAL] "<=", [NOT_EQAUL] "!=",  [Logical_NOT] "!",
-    [Logical_AND] "&&", [Logical_OR] "||"};
+    [GREATERTHAN] "[>]",  [LESSTHAN] "[<]",    [LESST_EQUAL] "[<=]",
+    [EQUAL_EQUAL] "[==]", [FUN_CALL] "CALL", [GREATT_EQUAL] "[>=]",
+    [LESST_EQUAL] "[<=]", [NOT_EQAUL] "[!=]",  [Logical_NOT] "[!]",
+    [Logical_AND] "[&&]", [Logical_OR] "[||]"};
 
 /*less than*/
 void lessthan_double(datavalue *d1, datavalue *d2, datavalue *result) {

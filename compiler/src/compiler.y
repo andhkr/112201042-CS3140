@@ -98,7 +98,8 @@
 	Gid	:	VAR		{ 
 						node* var_node = create_empty_node($1->name);
 						var_node->entry = $1;
-						$$ = var_node;;
+						var_node->type = $1->type;
+						$$ = var_node;
 					}
 		|	Gid '[' NUM ']'	{
 						/*array creation*/

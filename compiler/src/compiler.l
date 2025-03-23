@@ -39,7 +39,7 @@ integer			{
 					return T_INT;	
 				}		
 
-boolean			{;
+boolean			{
 					curr_datatype = BOOL;
 					yylval.treeNode = create_empty_node("boolean");
 					return T_BOOL;	
@@ -129,6 +129,7 @@ break          	{	yylval.treeNode = create_empty_node("break");
 								if(wflag == 1){
 									datavalue v;
 									v.integer= 0;
+									// printf("%s\n",typename[curr_datatype]);
 									symbltblentry* entr = add_entry(symbltbl,strdup(yytext),curr_datatype,v);
 									yylval.entry = entr;
 								}else{

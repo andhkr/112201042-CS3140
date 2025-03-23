@@ -110,6 +110,15 @@ void print_entry(symbltblentry *entry) {
       printf("%d , ", entry->value.intarr.ptr[i]);
     }
     printf("|\n");
+    break;
+  case BOOLARRAY:
+    printf("| %-*s | %-*s | ", clen_for_var, entry->name, clen_for_type,
+           "bool array");
+    for (int i = 0; i < entry->value.boolarr.capacity; ++i) {
+      printf("%d , ", entry->value.boolarr.ptr[i]);
+    }
+    printf("|\n");
+    break;
   default:
     break;
   }
