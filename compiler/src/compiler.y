@@ -43,7 +43,7 @@
 %token <treeNode> IF ELSE
 %token <treeNode> LOGICAL_AND LOGICAL_NOT LOGICAL_OR
 %token <treeNode> EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
-%token <treeNode> FOR BREAK_Y 
+%token <treeNode> FOR BREAK_Y CONTINUE
 %token <entry> VAR
 %token <var> NUM 
 %token <b_var> T F
@@ -54,13 +54,14 @@
 %type <treeNode> cond_stmt stmt_list statement control_stmt
 
 %right '='
-%left '<' '>'
-%left EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
+%left LOGICAL_OR
+%left LOGICAL_AND
+%left EQUALEQUAL NOTEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL '<' '>'
 %left '+' '-'
-%left '*' '/'
-%left '%'
-%left LOGICAL_AND LOGICAL_OR
-%left LOGICAL_NOT 
+%left '*' '/' '%'
+%right LOGICAL_NOT
+
+
 
 
 %%
@@ -229,6 +230,7 @@
 		                                                							}
 		;
 	control_stmt: BREAK_Y     {$$ = $1;}
+			| CONTINUE        {$$ = $1;}
 	;
 	expr	:	NUM 		{
 								char word[13];

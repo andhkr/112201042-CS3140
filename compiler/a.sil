@@ -2,12 +2,12 @@ decl
   integer arr[10];
   integer key, i;
   integer l, r, mid, result;
-  boolean barr[10];
+  integer a,b,c;
+  boolean barr[10],final;
 enddecl
 begin
   for(i = 0; i < 10; i = i + 1){
     arr[i] = i + 10;
-    barr[i]=true;
   }
   l = 0;
   r = 9;
@@ -27,6 +27,29 @@ begin
       endif
     endif
   
-  }
-  write(result);
+}
+
+final = false;
+
+for(i = 0;i<10;i = i+1){
+    if( i%2 == 0) then
+      arr[i] = i*9;
+      continue;
+    endif
+    if(arr[i]<40) then
+      barr[i]=true;
+    endif
+    final = NOT final;
+}
+
+
+a = 10;
+b = 20;
+if (a < b AND b > 15) then
+    c = a + b;
+else
+    c = a - b;
+endif
+
+write(result);
 end

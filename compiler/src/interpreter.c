@@ -8,6 +8,10 @@ datavalue array_access(node *tree_node) {
     int *arr = tree_node->entry->value.intarr.ptr;
     d.integer = arr[array_index(tree_node)];
     break;
+  case BOOLARRAY:
+    bool *barr = tree_node->entry->value.boolarr.ptr;
+    d.boolean = barr[array_index(tree_node)];
+    break;
   default:
     break;
   }
@@ -18,6 +22,8 @@ datavalue solve_expr(node *tree_node) {
   datavalue result;
   datavalue left;
   datavalue right;
+  memset(&result,0,sizeof(datavalue));
+  if(tree_node == NULL) return result;
   switch (tree_node->op) {
   case PLUS:
     left = solve_expr(tree_node->ptr_children_list);
@@ -51,7 +57,6 @@ datavalue solve_expr(node *tree_node) {
     right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
     isequalops[tree_node->type](&left, &right, &result);
     break;
-    break;
   case GREATERTHAN:
     left = solve_expr(tree_node->ptr_children_list);
     right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
@@ -66,6 +71,30 @@ datavalue solve_expr(node *tree_node) {
     left = solve_expr(tree_node->ptr_children_list);
     right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
     greatteqops[tree_node->type](&left, &right, &result);
+    break;
+  case MODULO:
+    left = solve_expr(tree_node->ptr_children_list);
+    right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+    int ans = (left.integer)%(right.integer);
+    update_data(&result,&ans,sizeof(int));
+    break;
+  case Logical_AND:
+    left = solve_expr(tree_node->ptr_children_list);
+    right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+    bool aans = (left.integer)&&(right.integer);
+    update_data(&result,&aans,sizeof(bool));
+    break;
+  case Logical_OR:
+    left = solve_expr(tree_node->ptr_children_list);
+    right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+    bool oans = (left.integer)||(right.integer);
+    update_data(&result,&oans,sizeof(bool));
+    break;
+  case Logical_NOT:
+    left = solve_expr(tree_node->ptr_children_list);
+    right = solve_expr(tree_node->ptr_children_list->ptr_sibling);
+    bool nans = !(left.integer);
+    update_data(&result,&nans,sizeof(bool));
     break;
   default:
     if (strcmp(tree_node->label, "ArrayAccess") == 0) {
@@ -93,6 +122,7 @@ void solve_assign(node *tree_node) {
     case BOOLARRAY:
       bool *barr = l_value->entry->value.boolarr.ptr;
       int bindex = array_index(l_value);
+
       barr[bindex] = value.boolean;
     default:
       break;
@@ -119,11 +149,13 @@ int interprete(node *tree_node) {
     push_back(&manager, symbltbl);
     while ((solve_expr(condition->ptr_children_list).boolean)) {
       node *for_body = body->ptr_children_list;
+      
       while (for_body) {
-        if(interprete(for_body)){
+        int ret_val = interprete(for_body);
+        if(ret_val == 1){
           goto out;
         }
-        
+        else if (ret_val == -1) break;
         for_body = for_body->ptr_sibling;
       }
       if (iterator->ptr_children_list) {
@@ -142,10 +174,11 @@ int interprete(node *tree_node) {
       push_back(&manager, symbltbl);
       node *stmts_in_if_body = if_body->ptr_children_list;
       while (stmts_in_if_body) {
-        if(interprete(stmts_in_if_body)){
+        int ret_val = interprete(stmts_in_if_body);
+        if(ret_val != 0){
           pop_back(&manager);
           tree_node->exp_value.boolean = true;
-          return 1;
+          return ret_val;
         }
         stmts_in_if_body = stmts_in_if_body->ptr_sibling;
       }
@@ -153,18 +186,21 @@ int interprete(node *tree_node) {
       tree_node->exp_value.boolean = true;
     }
   } else if (strcmp(tree_node->label, "branch") == 0) {
-    if(interprete(tree_node->ptr_children_list)) return 1;
+    int ret_val = interprete(tree_node->ptr_children_list);
+    if(ret_val != 0) return ret_val;
     if (!(tree_node->ptr_children_list->exp_value.boolean)) {
-      if(interprete(tree_node->ptr_children_list->ptr_sibling)) return 1;
+      ret_val = interprete(tree_node->ptr_children_list->ptr_sibling);
+      if(ret_val != 0) return ret_val;
     }
   } else if (strcmp(tree_node->label, "else") == 0) {
     push_back(&manager, symbltbl);
     node *else_body = tree_node->ptr_children_list;
     node *stmts_in_else_body = else_body->ptr_children_list;
     while (stmts_in_else_body) {
-      if(interprete(stmts_in_else_body)){
+      int ret_val = interprete(stmts_in_else_body);
+      if(ret_val != 0){
         pop_back(&manager);
-        return 1;
+        return ret_val;
       }
       stmts_in_else_body = stmts_in_else_body->ptr_sibling;
     }
@@ -173,6 +209,8 @@ int interprete(node *tree_node) {
     solve_assign(tree_node);
   } else if (strcmp(tree_node->label, "break") == 0) {
     return 1;
+  }else if (strcmp(tree_node->label, "continue") == 0) {
+    return -1;
   }
   return 0;
 }

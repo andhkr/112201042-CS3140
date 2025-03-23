@@ -154,7 +154,7 @@ char *operations_name[] = {
     [GREATERTHAN] "[>]",  [LESSTHAN] "[<]",    [LESST_EQUAL] "[<=]",
     [EQUAL_EQUAL] "[==]", [FUN_CALL] "CALL", [GREATT_EQUAL] "[>=]",
     [LESST_EQUAL] "[<=]", [NOT_EQAUL] "[!=]",  [Logical_NOT] "[!]",
-    [Logical_AND] "[&&]", [Logical_OR] "[||]"};
+    [Logical_AND] "[&&]", [Logical_OR] "[||]",[MODULO] "[%]"};
 
 /*less than*/
 void lessthan_double(datavalue *d1, datavalue *d2, datavalue *result) {

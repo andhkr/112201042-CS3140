@@ -59,53 +59,54 @@ Grammar
    37          | FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list '}'
 
    38 control_stmt: BREAK_Y
+   39             | CONTINUE
 
-   39 expr: NUM
-   40     | T
-   41     | F
-   42     | '-' expr
-   43     | var_expr
-   44     | '(' expr ')'
-   45     | expr '+' expr
-   46     | expr '-' expr
-   47     | expr '*' expr
-   48     | expr '/' expr
-   49     | expr '%' expr
-   50     | expr '<' expr
-   51     | expr '>' expr
-   52     | expr GREATERTHANOREQUAL expr
-   53     | expr LESSTHANOREQUAL expr
-   54     | expr NOTEQUAL expr
-   55     | expr EQUALEQUAL expr
-   56     | LOGICAL_NOT expr
-   57     | expr LOGICAL_AND expr
-   58     | expr LOGICAL_OR expr
+   40 expr: NUM
+   41     | T
+   42     | F
+   43     | '-' expr
+   44     | var_expr
+   45     | '(' expr ')'
+   46     | expr '+' expr
+   47     | expr '-' expr
+   48     | expr '*' expr
+   49     | expr '/' expr
+   50     | expr '%' expr
+   51     | expr '<' expr
+   52     | expr '>' expr
+   53     | expr GREATERTHANOREQUAL expr
+   54     | expr LESSTHANOREQUAL expr
+   55     | expr NOTEQUAL expr
+   56     | expr EQUALEQUAL expr
+   57     | LOGICAL_NOT expr
+   58     | expr LOGICAL_AND expr
+   59     | expr LOGICAL_OR expr
 
-   59 str_expr: VAR
-   60         | str_expr VAR
+   60 str_expr: VAR
+   61         | str_expr VAR
 
-   61 var_expr: VAR
-   62         | var_expr '[' expr ']'
+   62 var_expr: VAR
+   63         | var_expr '[' expr ']'
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     '"' (34) 32
-    '%' (37) 49
-    '(' (40) 13 31 32 37 44
-    ')' (41) 13 31 32 37 44
-    '*' (42) 47
-    '+' (43) 45
+    '%' (37) 50
+    '(' (40) 13 31 32 37 45
+    ')' (41) 13 31 32 37 45
+    '*' (42) 48
+    '+' (43) 46
     ',' (44) 9 10 21
-    '-' (45) 42 46
-    '/' (47) 48
+    '-' (45) 43 47
+    '/' (47) 49
     ';' (59) 5 16 26 27 28 30 37
-    '<' (60) 50
+    '<' (60) 51
     '=' (61) 34
-    '>' (62) 51
-    '[' (91) 12 62
-    ']' (93) 12 62
+    '>' (62) 52
+    '[' (91) 12 63
+    ']' (93) 12 63
     '{' (123) 37
     '}' (125) 37
     error (256) 26
@@ -116,98 +117,99 @@ Terminals, with rules where they appear
     T_BOOL <treeNode> (262) 7
     IF <treeNode> (263) 35 36
     ELSE <treeNode> (264) 36
-    LOGICAL_AND <treeNode> (265) 57
-    LOGICAL_NOT <treeNode> (266) 56
-    LOGICAL_OR <treeNode> (267) 58
-    EQUALEQUAL <treeNode> (268) 55
-    LESSTHANOREQUAL <treeNode> (269) 53
-    GREATERTHANOREQUAL <treeNode> (270) 52
-    NOTEQUAL <treeNode> (271) 54
+    LOGICAL_AND <treeNode> (265) 58
+    LOGICAL_NOT <treeNode> (266) 57
+    LOGICAL_OR <treeNode> (267) 59
+    EQUALEQUAL <treeNode> (268) 56
+    LESSTHANOREQUAL <treeNode> (269) 54
+    GREATERTHANOREQUAL <treeNode> (270) 53
+    NOTEQUAL <treeNode> (271) 55
     FOR <treeNode> (272) 37
     BREAK_Y <treeNode> (273) 38
-    VAR <entry> (274) 11 13 20 21 59 60 61
-    NUM <var> (275) 12 39
-    T <b_var> (276) 40
-    F <b_var> (277) 41
-    THEN <var> (278) 35 36
-    ENDIF <var> (279) 35 36
-    BEG (280) 23
-    END (281) 23
+    CONTINUE <treeNode> (274) 39
+    VAR <entry> (275) 11 13 20 21 60 61 62
+    NUM <var> (276) 12 40
+    T <b_var> (277) 41
+    F <b_var> (278) 42
+    THEN <var> (279) 35 36
+    ENDIF <var> (280) 35 36
+    BEG (281) 23
+    END (282) 23
 
 
 Nonterminals, with rules where they appear
 
-    $accept (44)
+    $accept (45)
         on left: 0
-    Prog (45)
+    Prog (46)
         on left: 1
         on right: 0
-    Gdecl_sec (46)
+    Gdecl_sec (47)
         on left: 2
         on right: 1
-    Gdecl_list <treeNode> (47)
+    Gdecl_list <treeNode> (48)
         on left: 3 4
         on right: 2 4
-    Gdecl <treeNode> (48)
+    Gdecl <treeNode> (49)
         on left: 5
         on right: 4
-    ret_type <treeNode> (49)
+    ret_type <treeNode> (50)
         on left: 6 7
         on right: 5
-    Glist <treeNode> (50)
+    Glist <treeNode> (51)
         on left: 8 9 10
         on right: 5 9 10
-    Gid <treeNode> (51)
+    Gid <treeNode> (52)
         on left: 11 12
         on right: 8 9 12
-    func (52)
+    func (53)
         on left: 13
         on right: 10
-    arg_list (53)
+    arg_list (54)
         on left: 14 15
         on right: 13
-    arg_list1 (54)
+    arg_list1 (55)
         on left: 16 17
         on right: 15 16
-    arg (55)
+    arg (56)
         on left: 18
         on right: 16 17
-    arg_type (56)
+    arg_type (57)
         on left: 19
         on right: 18
-    var_list (57)
+    var_list (58)
         on left: 20 21
         on right: 18 21
-    MainBlock (58)
+    MainBlock (59)
         on left: 22 23
         on right: 1
-    stmt_list <treeNode> (59)
+    stmt_list <treeNode> (60)
         on left: 24 25 26
         on right: 22 23 25 35 36 37
-    statement <treeNode> (60)
+    statement <treeNode> (61)
         on left: 27 28 29 30
         on right: 25
-    write_stmt <treeNode> (61)
+    write_stmt <treeNode> (62)
         on left: 31 32
         on right: 28
-    assign_stmt <treeNode> (62)
+    assign_stmt <treeNode> (63)
         on left: 33 34
         on right: 27 37
-    cond_stmt <treeNode> (63)
+    cond_stmt <treeNode> (64)
         on left: 35 36 37
         on right: 29
-    control_stmt <treeNode> (64)
-        on left: 38
+    control_stmt <treeNode> (65)
+        on left: 38 39
         on right: 30
-    expr <treeNode> (65)
-        on left: 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58
-        on right: 31 34 35 36 37 42 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 62
-    str_expr <treeNode> (66)
-        on left: 59 60
-        on right: 32 60
-    var_expr <treeNode> (67)
-        on left: 61 62
-        on right: 34 43 62
+    expr <treeNode> (66)
+        on left: 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+        on right: 31 34 35 36 37 43 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 63
+    str_expr <treeNode> (67)
+        on left: 60 61
+        on right: 32 61
+    var_expr <treeNode> (68)
+        on left: 62 63
+        on right: 34 44 63
 
 
 State 0
@@ -245,25 +247,26 @@ State 3
 
     1 Prog: Gdecl_sec • MainBlock
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
-    BEG      shift, and go to state 16
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
+    BEG       shift, and go to state 17
 
     $end  reduce using rule 24 (stmt_list)
     ';'   reduce using rule 33 (assign_stmt)
 
-    MainBlock     go to state 17
-    stmt_list     go to state 18
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
+    MainBlock     go to state 18
+    stmt_list     go to state 19
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
 State 4
@@ -284,7 +287,7 @@ State 6
 
     2 Gdecl_sec: DECL Gdecl_list • ENDDECL
 
-    ENDDECL  shift, and go to state 25
+    ENDDECL  shift, and go to state 26
 
 
 State 7
@@ -296,7 +299,7 @@ State 7
 
     $default  reduce using rule 3 (Gdecl_list)
 
-    Gdecl_list  go to state 26
+    Gdecl_list  go to state 27
     Gdecl       go to state 7
     ret_type    go to state 8
 
@@ -305,11 +308,11 @@ State 8
 
     5 Gdecl: ret_type • Glist ';'
 
-    VAR  shift, and go to state 27
+    VAR  shift, and go to state 28
 
-    Glist  go to state 28
-    Gid    go to state 29
-    func   go to state 30
+    Glist  go to state 29
+    Gid    go to state 30
+    func   go to state 31
 
 
 State 9
@@ -323,7 +326,7 @@ State 10
 
    26 stmt_list: error • ';'
 
-    ';'  shift, and go to state 31
+    ';'  shift, and go to state 32
 
 
 State 11
@@ -331,7 +334,7 @@ State 11
    31 write_stmt: WRITE • '(' expr ')'
    32           | WRITE • '(' '"' str_expr '"' ')'
 
-    '('  shift, and go to state 32
+    '('  shift, and go to state 33
 
 
 State 12
@@ -339,23 +342,23 @@ State 12
    35 cond_stmt: IF • expr THEN stmt_list ENDIF
    36          | IF • expr THEN stmt_list ELSE stmt_list ENDIF
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
-    expr      go to state 39
-    var_expr  go to state 40
+    expr      go to state 40
+    var_expr  go to state 41
 
 
 State 13
 
    37 cond_stmt: FOR • '(' assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list '}'
 
-    '('  shift, and go to state 41
+    '('  shift, and go to state 42
 
 
 State 14
@@ -367,58 +370,67 @@ State 14
 
 State 15
 
-   61 var_expr: VAR •
+   39 control_stmt: CONTINUE •
 
-    $default  reduce using rule 61 (var_expr)
+    $default  reduce using rule 39 (control_stmt)
 
 
 State 16
 
+   62 var_expr: VAR •
+
+    $default  reduce using rule 62 (var_expr)
+
+
+State 17
+
    23 MainBlock: BEG • stmt_list END
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
 
     END  reduce using rule 24 (stmt_list)
     ';'  reduce using rule 33 (assign_stmt)
 
-    stmt_list     go to state 42
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
+    stmt_list     go to state 43
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
-State 17
+State 18
 
     1 Prog: Gdecl_sec MainBlock •
 
     $default  reduce using rule 1 (Prog)
 
 
-State 18
+State 19
 
    22 MainBlock: stmt_list •
 
     $default  reduce using rule 22 (MainBlock)
 
 
-State 19
+State 20
 
    25 stmt_list: statement • stmt_list
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
 
     $end   reduce using rule 24 (stmt_list)
     ELSE   reduce using rule 24 (stmt_list)
@@ -427,1485 +439,1476 @@ State 19
     ';'    reduce using rule 33 (assign_stmt)
     '}'    reduce using rule 24 (stmt_list)
 
-    stmt_list     go to state 43
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
-
-
-State 20
-
-   28 statement: write_stmt • ';'
-
-    ';'  shift, and go to state 44
+    stmt_list     go to state 44
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
 State 21
 
-   27 statement: assign_stmt • ';'
+   28 statement: write_stmt • ';'
 
     ';'  shift, and go to state 45
 
 
 State 22
 
+   27 statement: assign_stmt • ';'
+
+    ';'  shift, and go to state 46
+
+
+State 23
+
    29 statement: cond_stmt •
 
     $default  reduce using rule 29 (statement)
 
 
-State 23
+State 24
 
    30 statement: control_stmt • ';'
 
-    ';'  shift, and go to state 46
-
-
-State 24
-
-   34 assign_stmt: var_expr • '=' expr
-   62 var_expr: var_expr • '[' expr ']'
-
-    '='  shift, and go to state 47
-    '['  shift, and go to state 48
+    ';'  shift, and go to state 47
 
 
 State 25
+
+   34 assign_stmt: var_expr • '=' expr
+   63 var_expr: var_expr • '[' expr ']'
+
+    '='  shift, and go to state 48
+    '['  shift, and go to state 49
+
+
+State 26
 
     2 Gdecl_sec: DECL Gdecl_list ENDDECL •
 
     $default  reduce using rule 2 (Gdecl_sec)
 
 
-State 26
+State 27
 
     4 Gdecl_list: Gdecl Gdecl_list •
 
     $default  reduce using rule 4 (Gdecl_list)
 
 
-State 27
+State 28
 
    11 Gid: VAR •
    13 func: VAR • '(' arg_list ')'
 
-    '('  shift, and go to state 49
+    '('  shift, and go to state 50
 
     $default  reduce using rule 11 (Gid)
 
 
-State 28
+State 29
 
     5 Gdecl: ret_type Glist • ';'
 
-    ';'  shift, and go to state 50
+    ';'  shift, and go to state 51
 
 
-State 29
+State 30
 
     8 Glist: Gid •
     9      | Gid • ',' Glist
    12 Gid: Gid • '[' NUM ']'
 
-    ','  shift, and go to state 51
-    '['  shift, and go to state 52
+    ','  shift, and go to state 52
+    '['  shift, and go to state 53
 
     $default  reduce using rule 8 (Glist)
 
 
-State 30
+State 31
 
    10 Glist: func • ',' Glist
 
-    ','  shift, and go to state 53
+    ','  shift, and go to state 54
 
 
-State 31
+State 32
 
    26 stmt_list: error ';' •
 
     $default  reduce using rule 26 (stmt_list)
 
 
-State 32
+State 33
 
    31 write_stmt: WRITE '(' • expr ')'
    32           | WRITE '(' • '"' str_expr '"' ')'
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-    '"'          shift, and go to state 54
-
-    expr      go to state 55
-    var_expr  go to state 40
-
-
-State 33
-
-   56 expr: LOGICAL_NOT • expr
-
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+    '"'          shift, and go to state 55
 
     expr      go to state 56
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 34
 
-   39 expr: NUM •
+   57 expr: LOGICAL_NOT • expr
 
-    $default  reduce using rule 39 (expr)
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+
+    expr      go to state 57
+    var_expr  go to state 41
 
 
 State 35
 
-   40 expr: T •
+   40 expr: NUM •
 
     $default  reduce using rule 40 (expr)
 
 
 State 36
 
-   41 expr: F •
+   41 expr: T •
 
     $default  reduce using rule 41 (expr)
 
 
 State 37
 
-   42 expr: '-' • expr
+   42 expr: F •
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-
-    expr      go to state 57
-    var_expr  go to state 40
+    $default  reduce using rule 42 (expr)
 
 
 State 38
 
-   44 expr: '(' • expr ')'
+   43 expr: '-' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 58
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 39
 
-   35 cond_stmt: IF expr • THEN stmt_list ENDIF
-   36          | IF expr • THEN stmt_list ELSE stmt_list ENDIF
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   45 expr: '(' • expr ')'
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    THEN                shift, and go to state 65
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+
+    expr      go to state 59
+    var_expr  go to state 41
 
 
 State 40
 
-   43 expr: var_expr •
-   62 var_expr: var_expr • '[' expr ']'
+   35 cond_stmt: IF expr • THEN stmt_list ENDIF
+   36          | IF expr • THEN stmt_list ELSE stmt_list ENDIF
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    '['  shift, and go to state 48
-
-    $default  reduce using rule 43 (expr)
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    THEN                shift, and go to state 66
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
 
 
 State 41
 
-   37 cond_stmt: FOR '(' • assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list '}'
+   44 expr: var_expr •
+   63 var_expr: var_expr • '[' expr ']'
 
-    VAR  shift, and go to state 15
+    '['  shift, and go to state 49
 
-    $default  reduce using rule 33 (assign_stmt)
-
-    assign_stmt  go to state 73
-    var_expr     go to state 24
+    $default  reduce using rule 44 (expr)
 
 
 State 42
 
-   23 MainBlock: BEG stmt_list • END
+   37 cond_stmt: FOR '(' • assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list '}'
 
-    END  shift, and go to state 74
+    VAR  shift, and go to state 16
+
+    $default  reduce using rule 33 (assign_stmt)
+
+    assign_stmt  go to state 74
+    var_expr     go to state 25
 
 
 State 43
+
+   23 MainBlock: BEG stmt_list • END
+
+    END  shift, and go to state 75
+
+
+State 44
 
    25 stmt_list: statement stmt_list •
 
     $default  reduce using rule 25 (stmt_list)
 
 
-State 44
+State 45
 
    28 statement: write_stmt ';' •
 
     $default  reduce using rule 28 (statement)
 
 
-State 45
+State 46
 
    27 statement: assign_stmt ';' •
 
     $default  reduce using rule 27 (statement)
 
 
-State 46
+State 47
 
    30 statement: control_stmt ';' •
 
     $default  reduce using rule 30 (statement)
 
 
-State 47
+State 48
 
    34 assign_stmt: var_expr '=' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-
-    expr      go to state 75
-    var_expr  go to state 40
-
-
-State 48
-
-   62 var_expr: var_expr '[' • expr ']'
-
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 76
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 49
 
-   13 func: VAR '(' • arg_list ')'
+   63 var_expr: var_expr '[' • expr ']'
 
-    T_INT  shift, and go to state 77
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
-    $default  reduce using rule 14 (arg_list)
-
-    arg_list   go to state 78
-    arg_list1  go to state 79
-    arg        go to state 80
-    arg_type   go to state 81
+    expr      go to state 77
+    var_expr  go to state 41
 
 
 State 50
+
+   13 func: VAR '(' • arg_list ')'
+
+    T_INT  shift, and go to state 78
+
+    $default  reduce using rule 14 (arg_list)
+
+    arg_list   go to state 79
+    arg_list1  go to state 80
+    arg        go to state 81
+    arg_type   go to state 82
+
+
+State 51
 
     5 Gdecl: ret_type Glist ';' •
 
     $default  reduce using rule 5 (Gdecl)
 
 
-State 51
+State 52
 
     9 Glist: Gid ',' • Glist
 
-    VAR  shift, and go to state 27
+    VAR  shift, and go to state 28
 
-    Glist  go to state 82
-    Gid    go to state 29
-    func   go to state 30
-
-
-State 52
-
-   12 Gid: Gid '[' • NUM ']'
-
-    NUM  shift, and go to state 83
+    Glist  go to state 83
+    Gid    go to state 30
+    func   go to state 31
 
 
 State 53
 
-   10 Glist: func ',' • Glist
+   12 Gid: Gid '[' • NUM ']'
 
-    VAR  shift, and go to state 27
-
-    Glist  go to state 84
-    Gid    go to state 29
-    func   go to state 30
+    NUM  shift, and go to state 84
 
 
 State 54
 
-   32 write_stmt: WRITE '(' '"' • str_expr '"' ')'
+   10 Glist: func ',' • Glist
 
-    VAR  shift, and go to state 85
+    VAR  shift, and go to state 28
 
-    str_expr  go to state 86
+    Glist  go to state 85
+    Gid    go to state 30
+    func   go to state 31
 
 
 State 55
 
-   31 write_stmt: WRITE '(' expr • ')'
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   32 write_stmt: WRITE '(' '"' • str_expr '"' ')'
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
-    ')'                 shift, and go to state 87
+    VAR  shift, and go to state 86
+
+    str_expr  go to state 87
 
 
 State 56
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   56     | LOGICAL_NOT expr •
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   31 write_stmt: WRITE '(' expr • ')'
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    $default  reduce using rule 56 (expr)
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
+    ')'                 shift, and go to state 88
 
 
 State 57
 
-   42 expr: '-' expr •
-   45     | expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   57     | LOGICAL_NOT expr •
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
-
-    $default  reduce using rule 42 (expr)
+    $default  reduce using rule 57 (expr)
 
 
 State 58
 
-   44 expr: '(' expr • ')'
-   45     | expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   43 expr: '-' expr •
+   46     | expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
-    ')'                 shift, and go to state 88
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
+
+    $default  reduce using rule 43 (expr)
 
 
 State 59
 
-   57 expr: expr LOGICAL_AND • expr
+   45 expr: '(' expr • ')'
+   46     | expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-
-    expr      go to state 89
-    var_expr  go to state 40
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
+    ')'                 shift, and go to state 89
 
 
 State 60
 
-   58 expr: expr LOGICAL_OR • expr
+   58 expr: expr LOGICAL_AND • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 90
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 61
 
-   55 expr: expr EQUALEQUAL • expr
+   59 expr: expr LOGICAL_OR • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 91
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 62
 
-   53 expr: expr LESSTHANOREQUAL • expr
+   56 expr: expr EQUALEQUAL • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 92
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 63
 
-   52 expr: expr GREATERTHANOREQUAL • expr
+   54 expr: expr LESSTHANOREQUAL • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 93
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 64
 
-   54 expr: expr NOTEQUAL • expr
+   53 expr: expr GREATERTHANOREQUAL • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 94
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 65
 
+   55 expr: expr NOTEQUAL • expr
+
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+
+    expr      go to state 95
+    var_expr  go to state 41
+
+
+State 66
+
    35 cond_stmt: IF expr THEN • stmt_list ENDIF
    36          | IF expr THEN • stmt_list ELSE stmt_list ENDIF
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
 
     ELSE   reduce using rule 24 (stmt_list)
     ENDIF  reduce using rule 24 (stmt_list)
     ';'    reduce using rule 33 (assign_stmt)
 
-    stmt_list     go to state 95
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
-
-
-State 66
-
-   50 expr: expr '<' • expr
-
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-
-    expr      go to state 96
-    var_expr  go to state 40
+    stmt_list     go to state 96
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
 State 67
 
-   51 expr: expr '>' • expr
+   51 expr: expr '<' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 97
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 68
 
-   45 expr: expr '+' • expr
+   52 expr: expr '>' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 98
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 69
 
-   46 expr: expr '-' • expr
+   46 expr: expr '+' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 99
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 70
 
-   47 expr: expr '*' • expr
+   47 expr: expr '-' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 100
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 71
 
-   48 expr: expr '/' • expr
+   48 expr: expr '*' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 101
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 72
 
-   49 expr: expr '%' • expr
+   49 expr: expr '/' • expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
 
     expr      go to state 102
-    var_expr  go to state 40
+    var_expr  go to state 41
 
 
 State 73
 
-   37 cond_stmt: FOR '(' assign_stmt • ';' expr ';' assign_stmt ')' '{' stmt_list '}'
+   50 expr: expr '%' • expr
 
-    ';'  shift, and go to state 103
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+
+    expr      go to state 103
+    var_expr  go to state 41
 
 
 State 74
+
+   37 cond_stmt: FOR '(' assign_stmt • ';' expr ';' assign_stmt ')' '{' stmt_list '}'
+
+    ';'  shift, and go to state 104
+
+
+State 75
 
    23 MainBlock: BEG stmt_list END •
 
     $default  reduce using rule 23 (MainBlock)
 
 
-State 75
+State 76
 
    34 assign_stmt: var_expr '=' expr •
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
 
     $default  reduce using rule 34 (assign_stmt)
 
 
-State 76
-
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
-   62 var_expr: var_expr '[' expr • ']'
-
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
-    ']'                 shift, and go to state 104
-
-
 State 77
+
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
+   63 var_expr: var_expr '[' expr • ']'
+
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
+    ']'                 shift, and go to state 105
+
+
+State 78
 
    19 arg_type: T_INT •
 
     $default  reduce using rule 19 (arg_type)
 
 
-State 78
+State 79
 
    13 func: VAR '(' arg_list • ')'
 
-    ')'  shift, and go to state 105
+    ')'  shift, and go to state 106
 
 
-State 79
+State 80
 
    15 arg_list: arg_list1 •
    16 arg_list1: arg_list1 • ';' arg
 
-    ';'  shift, and go to state 106
+    ';'  shift, and go to state 107
 
     $default  reduce using rule 15 (arg_list)
 
 
-State 80
+State 81
 
    17 arg_list1: arg •
 
     $default  reduce using rule 17 (arg_list1)
 
 
-State 81
+State 82
 
    18 arg: arg_type • var_list
 
-    VAR  shift, and go to state 107
+    VAR  shift, and go to state 108
 
-    var_list  go to state 108
+    var_list  go to state 109
 
 
-State 82
+State 83
 
     9 Glist: Gid ',' Glist •
 
     $default  reduce using rule 9 (Glist)
 
 
-State 83
+State 84
 
    12 Gid: Gid '[' NUM • ']'
 
-    ']'  shift, and go to state 109
+    ']'  shift, and go to state 110
 
 
-State 84
+State 85
 
    10 Glist: func ',' Glist •
 
     $default  reduce using rule 10 (Glist)
 
 
-State 85
-
-   59 str_expr: VAR •
-
-    $default  reduce using rule 59 (str_expr)
-
-
 State 86
 
-   32 write_stmt: WRITE '(' '"' str_expr • '"' ')'
-   60 str_expr: str_expr • VAR
+   60 str_expr: VAR •
 
-    VAR  shift, and go to state 110
-    '"'  shift, and go to state 111
+    $default  reduce using rule 60 (str_expr)
 
 
 State 87
+
+   32 write_stmt: WRITE '(' '"' str_expr • '"' ')'
+   61 str_expr: str_expr • VAR
+
+    VAR  shift, and go to state 111
+    '"'  shift, and go to state 112
+
+
+State 88
 
    31 write_stmt: WRITE '(' expr ')' •
 
     $default  reduce using rule 31 (write_stmt)
 
 
-State 88
-
-   44 expr: '(' expr ')' •
-
-    $default  reduce using rule 44 (expr)
-
-
 State 89
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   57     | expr LOGICAL_AND expr •
-   58     | expr • LOGICAL_OR expr
+   45 expr: '(' expr ')' •
 
-    $default  reduce using rule 57 (expr)
+    $default  reduce using rule 45 (expr)
 
 
 State 90
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
-   58     | expr LOGICAL_OR expr •
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   58     | expr LOGICAL_AND expr •
+   59     | expr • LOGICAL_OR expr
+
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
 
     $default  reduce using rule 58 (expr)
 
 
 State 91
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   55     | expr EQUALEQUAL expr •
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
+   59     | expr LOGICAL_OR expr •
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '+'          shift, and go to state 68
-    '-'          shift, and go to state 69
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
+    LOGICAL_AND         shift, and go to state 60
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
 
-    $default  reduce using rule 55 (expr)
+    $default  reduce using rule 59 (expr)
 
 
 State 92
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   53     | expr LESSTHANOREQUAL expr •
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   56     | expr EQUALEQUAL expr •
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '+'          shift, and go to state 68
-    '-'          shift, and go to state 69
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
-    $default  reduce using rule 53 (expr)
+    $default  reduce using rule 56 (expr)
 
 
 State 93
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   52     | expr GREATERTHANOREQUAL expr •
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   54     | expr LESSTHANOREQUAL expr •
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '+'          shift, and go to state 68
-    '-'          shift, and go to state 69
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
-
-    $default  reduce using rule 52 (expr)
-
-
-State 94
-
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   54     | expr NOTEQUAL expr •
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
-
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '+'          shift, and go to state 68
-    '-'          shift, and go to state 69
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
     $default  reduce using rule 54 (expr)
 
 
+State 94
+
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   53     | expr GREATERTHANOREQUAL expr •
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
+
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
+
+    $default  reduce using rule 53 (expr)
+
+
 State 95
 
-   35 cond_stmt: IF expr THEN stmt_list • ENDIF
-   36          | IF expr THEN stmt_list • ELSE stmt_list ENDIF
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   55     | expr NOTEQUAL expr •
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    ELSE   shift, and go to state 112
-    ENDIF  shift, and go to state 113
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
+
+    $default  reduce using rule 55 (expr)
 
 
 State 96
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   50     | expr '<' expr •
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   35 cond_stmt: IF expr THEN stmt_list • ENDIF
+   36          | IF expr THEN stmt_list • ELSE stmt_list ENDIF
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
-
-    $default  reduce using rule 50 (expr)
+    ELSE   shift, and go to state 113
+    ENDIF  shift, and go to state 114
 
 
 State 97
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   51     | expr '>' expr •
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   51     | expr '<' expr •
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
     $default  reduce using rule 51 (expr)
 
 
 State 98
 
-   45 expr: expr • '+' expr
-   45     | expr '+' expr •
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   52     | expr '>' expr •
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
-    $default  reduce using rule 45 (expr)
+    $default  reduce using rule 52 (expr)
 
 
 State 99
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   46     | expr '-' expr •
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   46     | expr '+' expr •
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '*'          shift, and go to state 70
-    '/'          shift, and go to state 71
-    '%'          shift, and go to state 72
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
     $default  reduce using rule 46 (expr)
 
 
 State 100
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   47     | expr '*' expr •
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   47     | expr '-' expr •
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '%'          shift, and go to state 72
+    '*'  shift, and go to state 71
+    '/'  shift, and go to state 72
+    '%'  shift, and go to state 73
 
     $default  reduce using rule 47 (expr)
 
 
 State 101
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   48     | expr '/' expr •
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
-
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
-    '%'          shift, and go to state 72
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   48     | expr '*' expr •
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
     $default  reduce using rule 48 (expr)
 
 
 State 102
 
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   49     | expr '%' expr •
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
-
-    LOGICAL_AND  shift, and go to state 59
-    LOGICAL_OR   shift, and go to state 60
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   49     | expr '/' expr •
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
     $default  reduce using rule 49 (expr)
 
 
 State 103
 
-   37 cond_stmt: FOR '(' assign_stmt ';' • expr ';' assign_stmt ')' '{' stmt_list '}'
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   50     | expr '%' expr •
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_NOT  shift, and go to state 33
-    VAR          shift, and go to state 15
-    NUM          shift, and go to state 34
-    T            shift, and go to state 35
-    F            shift, and go to state 36
-    '-'          shift, and go to state 37
-    '('          shift, and go to state 38
-
-    expr      go to state 114
-    var_expr  go to state 40
+    $default  reduce using rule 50 (expr)
 
 
 State 104
 
-   62 var_expr: var_expr '[' expr ']' •
+   37 cond_stmt: FOR '(' assign_stmt ';' • expr ';' assign_stmt ')' '{' stmt_list '}'
 
-    $default  reduce using rule 62 (var_expr)
+    LOGICAL_NOT  shift, and go to state 34
+    VAR          shift, and go to state 16
+    NUM          shift, and go to state 35
+    T            shift, and go to state 36
+    F            shift, and go to state 37
+    '-'          shift, and go to state 38
+    '('          shift, and go to state 39
+
+    expr      go to state 115
+    var_expr  go to state 41
 
 
 State 105
+
+   63 var_expr: var_expr '[' expr ']' •
+
+    $default  reduce using rule 63 (var_expr)
+
+
+State 106
 
    13 func: VAR '(' arg_list ')' •
 
     $default  reduce using rule 13 (func)
 
 
-State 106
+State 107
 
    16 arg_list1: arg_list1 ';' • arg
 
-    T_INT  shift, and go to state 77
+    T_INT  shift, and go to state 78
 
-    arg       go to state 115
-    arg_type  go to state 81
+    arg       go to state 116
+    arg_type  go to state 82
 
 
-State 107
+State 108
 
    20 var_list: VAR •
    21         | VAR • ',' var_list
 
-    ','  shift, and go to state 116
+    ','  shift, and go to state 117
 
     $default  reduce using rule 20 (var_list)
 
 
-State 108
+State 109
 
    18 arg: arg_type var_list •
 
     $default  reduce using rule 18 (arg)
 
 
-State 109
+State 110
 
    12 Gid: Gid '[' NUM ']' •
 
     $default  reduce using rule 12 (Gid)
 
 
-State 110
-
-   60 str_expr: str_expr VAR •
-
-    $default  reduce using rule 60 (str_expr)
-
-
 State 111
 
-   32 write_stmt: WRITE '(' '"' str_expr '"' • ')'
+   61 str_expr: str_expr VAR •
 
-    ')'  shift, and go to state 117
+    $default  reduce using rule 61 (str_expr)
 
 
 State 112
 
+   32 write_stmt: WRITE '(' '"' str_expr '"' • ')'
+
+    ')'  shift, and go to state 118
+
+
+State 113
+
    36 cond_stmt: IF expr THEN stmt_list ELSE • stmt_list ENDIF
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
 
     ENDIF  reduce using rule 24 (stmt_list)
     ';'    reduce using rule 33 (assign_stmt)
 
-    stmt_list     go to state 118
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
+    stmt_list     go to state 119
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
-State 113
+State 114
 
    35 cond_stmt: IF expr THEN stmt_list ENDIF •
 
     $default  reduce using rule 35 (cond_stmt)
 
 
-State 114
+State 115
 
    37 cond_stmt: FOR '(' assign_stmt ';' expr • ';' assign_stmt ')' '{' stmt_list '}'
-   45 expr: expr • '+' expr
-   46     | expr • '-' expr
-   47     | expr • '*' expr
-   48     | expr • '/' expr
-   49     | expr • '%' expr
-   50     | expr • '<' expr
-   51     | expr • '>' expr
-   52     | expr • GREATERTHANOREQUAL expr
-   53     | expr • LESSTHANOREQUAL expr
-   54     | expr • NOTEQUAL expr
-   55     | expr • EQUALEQUAL expr
-   57     | expr • LOGICAL_AND expr
-   58     | expr • LOGICAL_OR expr
+   46 expr: expr • '+' expr
+   47     | expr • '-' expr
+   48     | expr • '*' expr
+   49     | expr • '/' expr
+   50     | expr • '%' expr
+   51     | expr • '<' expr
+   52     | expr • '>' expr
+   53     | expr • GREATERTHANOREQUAL expr
+   54     | expr • LESSTHANOREQUAL expr
+   55     | expr • NOTEQUAL expr
+   56     | expr • EQUALEQUAL expr
+   58     | expr • LOGICAL_AND expr
+   59     | expr • LOGICAL_OR expr
 
-    LOGICAL_AND         shift, and go to state 59
-    LOGICAL_OR          shift, and go to state 60
-    EQUALEQUAL          shift, and go to state 61
-    LESSTHANOREQUAL     shift, and go to state 62
-    GREATERTHANOREQUAL  shift, and go to state 63
-    NOTEQUAL            shift, and go to state 64
-    '<'                 shift, and go to state 66
-    '>'                 shift, and go to state 67
-    '+'                 shift, and go to state 68
-    '-'                 shift, and go to state 69
-    '*'                 shift, and go to state 70
-    '/'                 shift, and go to state 71
-    '%'                 shift, and go to state 72
-    ';'                 shift, and go to state 119
+    LOGICAL_AND         shift, and go to state 60
+    LOGICAL_OR          shift, and go to state 61
+    EQUALEQUAL          shift, and go to state 62
+    LESSTHANOREQUAL     shift, and go to state 63
+    GREATERTHANOREQUAL  shift, and go to state 64
+    NOTEQUAL            shift, and go to state 65
+    '<'                 shift, and go to state 67
+    '>'                 shift, and go to state 68
+    '+'                 shift, and go to state 69
+    '-'                 shift, and go to state 70
+    '*'                 shift, and go to state 71
+    '/'                 shift, and go to state 72
+    '%'                 shift, and go to state 73
+    ';'                 shift, and go to state 120
 
 
-State 115
+State 116
 
    16 arg_list1: arg_list1 ';' arg •
 
     $default  reduce using rule 16 (arg_list1)
 
 
-State 116
+State 117
 
    21 var_list: VAR ',' • var_list
 
-    VAR  shift, and go to state 107
+    VAR  shift, and go to state 108
 
-    var_list  go to state 120
+    var_list  go to state 121
 
 
-State 117
+State 118
 
    32 write_stmt: WRITE '(' '"' str_expr '"' ')' •
 
     $default  reduce using rule 32 (write_stmt)
 
 
-State 118
+State 119
 
    36 cond_stmt: IF expr THEN stmt_list ELSE stmt_list • ENDIF
 
-    ENDIF  shift, and go to state 121
-
-
-State 119
-
-   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' • assign_stmt ')' '{' stmt_list '}'
-
-    VAR  shift, and go to state 15
-
-    $default  reduce using rule 33 (assign_stmt)
-
-    assign_stmt  go to state 122
-    var_expr     go to state 24
+    ENDIF  shift, and go to state 122
 
 
 State 120
+
+   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' • assign_stmt ')' '{' stmt_list '}'
+
+    VAR  shift, and go to state 16
+
+    $default  reduce using rule 33 (assign_stmt)
+
+    assign_stmt  go to state 123
+    var_expr     go to state 25
+
+
+State 121
 
    21 var_list: VAR ',' var_list •
 
     $default  reduce using rule 21 (var_list)
 
 
-State 121
+State 122
 
    36 cond_stmt: IF expr THEN stmt_list ELSE stmt_list ENDIF •
 
     $default  reduce using rule 36 (cond_stmt)
 
 
-State 122
+State 123
 
    37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt • ')' '{' stmt_list '}'
 
-    ')'  shift, and go to state 123
-
-
-State 123
-
-   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' • '{' stmt_list '}'
-
-    '{'  shift, and go to state 124
+    ')'  shift, and go to state 124
 
 
 State 124
 
-   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' • stmt_list '}'
+   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' • '{' stmt_list '}'
 
-    error    shift, and go to state 10
-    WRITE    shift, and go to state 11
-    IF       shift, and go to state 12
-    FOR      shift, and go to state 13
-    BREAK_Y  shift, and go to state 14
-    VAR      shift, and go to state 15
-
-    ';'  reduce using rule 33 (assign_stmt)
-    '}'  reduce using rule 24 (stmt_list)
-
-    stmt_list     go to state 125
-    statement     go to state 19
-    write_stmt    go to state 20
-    assign_stmt   go to state 21
-    cond_stmt     go to state 22
-    control_stmt  go to state 23
-    var_expr      go to state 24
+    '{'  shift, and go to state 125
 
 
 State 125
 
-   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list • '}'
+   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' • stmt_list '}'
 
-    '}'  shift, and go to state 126
+    error     shift, and go to state 10
+    WRITE     shift, and go to state 11
+    IF        shift, and go to state 12
+    FOR       shift, and go to state 13
+    BREAK_Y   shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    VAR       shift, and go to state 16
+
+    ';'  reduce using rule 33 (assign_stmt)
+    '}'  reduce using rule 24 (stmt_list)
+
+    stmt_list     go to state 126
+    statement     go to state 20
+    write_stmt    go to state 21
+    assign_stmt   go to state 22
+    cond_stmt     go to state 23
+    control_stmt  go to state 24
+    var_expr      go to state 25
 
 
 State 126
+
+   37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list • '}'
+
+    '}'  shift, and go to state 127
+
+
+State 127
 
    37 cond_stmt: FOR '(' assign_stmt ';' expr ';' assign_stmt ')' '{' stmt_list '}' •
 

@@ -121,6 +121,9 @@ NOT				{
 break          	{	yylval.treeNode = create_empty_node("break");
 					return BREAK_Y;
 				}
+continue        {yylval.treeNode = create_empty_node("continue");
+					return CONTINUE;
+				}
 {digit}+        { 	
 					yylval.var = atoi(yytext);
 					return NUM;

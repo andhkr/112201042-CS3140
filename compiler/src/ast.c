@@ -83,8 +83,8 @@ void op_Div(node *new_node, symbltblentry *entry, node *left, node *right) {
 void op_modulo(node *new_node, symbltblentry *entry, node *left, node *right) {
   type_checking(left, right);
   Modulo(new_node, left, right);
-  init_node(new_node, entry, left, right, operations_name[DIV]);
-  new_node->op = DIV;
+  init_node(new_node, entry, left, right,operations_name[MODULO]);
+  new_node->op = MODULO;
 }
 
 void op_Uminus(node *new_node, symbltblentry *entry, node *left, node *right) {
@@ -174,13 +174,28 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
     intarray iarray = left->entry->value.intarr;
     int index = array_index(left);
 
-    if (index >= iarray.capacity) {
-      fprintf(stderr, "error:index out of bounds\n");
-      exit(EXIT_FAILURE);
+    if (stm_stack.sp == 0) {
+      if (index >= iarray.capacity) {
+        printf("index:%d,capacity:%d\n",index,iarray.capacity);
+        fprintf(stderr, "error:index out of bounds\n");
+        exit(EXIT_FAILURE);
+      }
+
+      iarray.ptr[index] = right->exp_value.integer;
     }
 
+    break;
+  case BOOLARRAY:
+    boolarray barray = left->entry->value.boolarr;
+    index = array_index(left);
+
     if (stm_stack.sp == 0) {
-      iarray.ptr[index] = right->exp_value.integer;
+      if (index >= barray.capacity) {
+        fprintf(stderr, "error:index out of bounds\n");
+        exit(EXIT_FAILURE);
+      }
+
+      barray.ptr[index] = right->exp_value.boolean;
     }
 
     break;
@@ -188,36 +203,39 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
     doublearray darray = left->entry->value.dblarr;
     index = array_index(left);
 
-    if (index >= darray.capacity) {
-      fprintf(stderr, "error:index out of bounds\n");
-      exit(EXIT_FAILURE);
+    if (stm_stack.sp == 0){
+      if (index >= darray.capacity) {
+        fprintf(stderr, "error:index out of bounds\n");
+        exit(EXIT_FAILURE);
+      }
+        darray.ptr[index] = right->exp_value.ldecimal;
     }
-    if (stm_stack.sp == 0)
-      darray.ptr[index] = right->exp_value.ldecimal;
     break;
   case CHARARRAY:
     chararray carray = left->entry->value.chararr;
     index = array_index(left);
 
-    if (index >= carray.capacity) {
-      fprintf(stderr, "error:index out of bounds\n");
-      exit(EXIT_FAILURE);
-    }
-    if (stm_stack.sp == 0)
+    if (stm_stack.sp == 0){
+      if (index >= carray.capacity) {
+        fprintf(stderr, "error:index out of bounds\n");
+        exit(EXIT_FAILURE);
+      }
       carray.ptr[index] = right->exp_value.character;
+    }
     break;
   case STRINGARRAY:
     stringarray sarray = left->entry->value.strarr;
     index = array_index(left);
 
-    if (index >= sarray.capacity) {
-      fprintf(stderr, "error:index out of bounds\n");
-      exit(EXIT_FAILURE);
-    }
-    if (stm_stack.sp == 0)
+    if (stm_stack.sp == 0){
+      if (index >= sarray.capacity) {
+        fprintf(stderr, "error:index out of bounds\n");
+        exit(EXIT_FAILURE);
+      }
       sarray.ptr[index] = right->exp_value.string;
+    }
     break;
-
+  
   default:
     if (stm_stack.sp == 0) {
       is_Array(right, NULL);
