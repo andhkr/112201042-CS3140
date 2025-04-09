@@ -46,16 +46,18 @@ void pop_back(symbtbl_manager *manager) {
 }
 
 symbltblentry *get_entry(symbol_table *symbtbl, char *name) {
-  symbltblentry *entry = NULL;
-  for (int i = manager.size - 1; i >= 0; --i) {
-    entry = find_entry(manager.array[i], name);
+  symbltblentry *entry = find_entry(symbtbl,name);
+  for (int i = manager.size - 2; i >= 0; --i) {
     if (entry)
       break;
+    entry = find_entry(manager.array[i], name);
   }
+  
   if (entry == NULL) {
     fprintf(stderr, "error:line no:%d:variable %s not declared\n",Lineno, name);
     exit(EXIT_FAILURE);
   }
+  
   return entry;
 }
 

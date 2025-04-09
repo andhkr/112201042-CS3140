@@ -33,24 +33,27 @@ int give_type(node* tree_node){
   if(tree_node == NULL) return -1;
   int t = 0;
   switch(tree_node->type){
-    case INTARRAY:
+    case INTARRAY:{
       int *arr = tree_node->entry->value.intarr.ptr;
       int index = array_index(tree_node);
       update_data(&tree_node->exp_value, arr + index, sizeof(int));
       t = INT;
       break;
-    case DOUBLEARRAY:
+    }
+    case DOUBLEARRAY:{
       double *darr = tree_node->entry->value.dblarr.ptr;
-      index = array_index(tree_node);
+      int index = array_index(tree_node);
       update_data(&tree_node->exp_value, darr + index, sizeof(double));
       t = DOUBLE;
       break;
-    case BOOLARRAY:
+    }
+    case BOOLARRAY:{
       bool *barr = tree_node->entry->value.boolarr.ptr;
-      index = array_index(tree_node);
+      int index = array_index(tree_node);
       update_data(&tree_node->exp_value, barr + index, sizeof(bool));
       t = BOOL;
-    break;
+      break;
+    }
     default:
       t = tree_node->type;
   }

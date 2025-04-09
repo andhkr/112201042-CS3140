@@ -28,7 +28,13 @@ int     wflag;
 digit	[0-9]
 letter	[a-zA-Z]
 
+
 %%
+"//"[^\n]* {/*ignore comment*/;}
+read            {
+					yylval.treeNode = create_empty_node("read");
+					return READ;
+				}
 write			{
 					yylval.treeNode = create_empty_node("write");
 					return WRITE;
@@ -155,6 +161,7 @@ continue        {yylval.treeNode = create_empty_node("continue");
 \n                  {
 						Lineno++;
 					}
+
 [ \t]				{
 	 					;
 					}
@@ -162,5 +169,4 @@ continue        {yylval.treeNode = create_empty_node("continue");
 						fprintf(stderr,"Error: line no:%d:new word not in grammer\n",Lineno);
 						exit(EXIT_FAILURE);
 					}		
-
 %%

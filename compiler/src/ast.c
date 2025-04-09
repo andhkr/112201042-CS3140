@@ -4,24 +4,24 @@
 int 	Lineno = 1;   // lex
 
 void (*operator[])(node *, symbltblentry *, node *, node *) = {
-  [PLUS] op_Add,
-  [SUB] op_Sub,
-  [MUL] op_Mul,
-  [DIV] op_Div,
-  [ASSIGN] op_Assign,
-  [U_MINUS] op_Uminus,
-  [MODULO] op_modulo,
-  [LESSTHAN] op_isLessthan,
-  [EQUAL_EQUAL] op_isEqual,
-  [FUN_CALL] op_FunCall,
-  [BREAK] op_break,
-  [GREATERTHAN] op_isGreatt,
-  [GREATT_EQUAL] op_isgreatteq,
-  [LESST_EQUAL] op_islessteq,
-  [NOT_EQAUL] op_isNoteq,
-  [Logical_NOT] op_logNot,
-  [Logical_AND] op_logAnd,
-  [Logical_OR] op_logOr,
+  [PLUS] = op_Add,
+  [SUB] = op_Sub,
+  [MUL] = op_Mul,
+  [DIV] = op_Div,
+  [ASSIGN] = op_Assign,
+  [U_MINUS] = op_Uminus,
+  [MODULO] = op_modulo,
+  [LESSTHAN] = op_isLessthan,
+  [EQUAL_EQUAL] = op_isEqual,
+  [FUN_CALL] = op_FunCall,
+  [BREAK] = op_break,
+  [GREATERTHAN] = op_isGreatt,
+  [GREATT_EQUAL] = op_isgreatteq,
+  [LESST_EQUAL] = op_islessteq,
+  [NOT_EQAUL] = op_isNoteq,
+  [Logical_NOT] = op_logNot,
+  [Logical_AND] = op_logAnd,
+  [Logical_OR] = op_logOr,
 };
 
 void *safe_malloc(size_t size) {
@@ -170,7 +170,7 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
   init_node(new_node, entry, left, right, operations_name[ASSIGN]);
   new_node->op = ASSIGN;
   switch (left->type) {
-  case INTARRAY:
+  case INTARRAY:{
     intarray iarray = left->entry->value.intarr;
     int index = array_index(left);
 
@@ -183,11 +183,12 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
 
       iarray.ptr[index] = right->exp_value.integer;
     }
-
+    
     break;
-  case BOOLARRAY:
+  }
+  case BOOLARRAY:{
     boolarray barray = left->entry->value.boolarr;
-    index = array_index(left);
+    int index = array_index(left);
 
     if (stm_stack.sp == 0) {
       if (index >= barray.capacity) {
@@ -199,9 +200,10 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
     }
 
     break;
-  case DOUBLEARRAY:
+  }
+  case DOUBLEARRAY:{
     doublearray darray = left->entry->value.dblarr;
-    index = array_index(left);
+    int index = array_index(left);
 
     if (stm_stack.sp == 0){
       if (index >= darray.capacity) {
@@ -211,9 +213,10 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
         darray.ptr[index] = right->exp_value.ldecimal;
     }
     break;
-  case CHARARRAY:
+  }
+  case CHARARRAY:{
     chararray carray = left->entry->value.chararr;
-    index = array_index(left);
+    int index = array_index(left);
 
     if (stm_stack.sp == 0){
       if (index >= carray.capacity) {
@@ -223,9 +226,10 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
       carray.ptr[index] = right->exp_value.character;
     }
     break;
-  case STRINGARRAY:
+  }
+  case STRINGARRAY:{
     stringarray sarray = left->entry->value.strarr;
-    index = array_index(left);
+    int index = array_index(left);
 
     if (stm_stack.sp == 0){
       if (index >= sarray.capacity) {
@@ -235,7 +239,7 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
       sarray.ptr[index] = right->exp_value.string;
     }
     break;
-  
+  }
   default:
     if (stm_stack.sp == 0) {
       is_Array(right, NULL);
@@ -246,7 +250,7 @@ void op_Assign(node *new_node, symbltblentry *entry, node *left, node *right) {
 }
 
 
-void op_break(node *new_node, symbltblentry *entry, node *left, node *right) {
+void op_break(node *new_node, symbltblentry *entry, node *left, node *right){
 }
 
 node *create_node_ast(opeartions op, symbltblentry *entry, node *left,
@@ -420,7 +424,7 @@ void graphBox(char *s, int *w, int *h) {
 }
 
 void graphDrawBox(char *s, int c, int l) {
-  int i;
+  size_t i;
   graphTest(l, c + strlen(s) - 1 + hmar);
   for (i = 0; i < strlen(s); i++) {
     canvas[l][c + i + hmar] = s[i];

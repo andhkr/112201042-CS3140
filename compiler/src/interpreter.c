@@ -4,14 +4,16 @@ datavalue array_access(node *tree_node) {
   datavalue d;
   memset(&d,0,sizeof(datatype));
   switch (tree_node->type) {
-  case INTARRAY:
+  case INTARRAY:{
     int *arr = tree_node->entry->value.intarr.ptr;
     d.integer = arr[array_index(tree_node)];
     break;
-  case BOOLARRAY:
+  }
+  case BOOLARRAY:{
     bool *barr = tree_node->entry->value.boolarr.ptr;
     d.boolean = barr[array_index(tree_node)];
     break;
+  }
   default:
     break;
   }
@@ -114,16 +116,18 @@ void solve_assign(node *tree_node) {
   datavalue value = solve_expr(r_value);
   if (strcmp(l_value->label, "ArrayAccess") == 0) {
     switch (l_value->type) {
-    case INTARRAY:
+    case INTARRAY:{
       int *arr = l_value->entry->value.intarr.ptr;
       int index = array_index(l_value);
       arr[index] = value.integer;
       break;
-    case BOOLARRAY:
+    }
+    case BOOLARRAY:{
       bool *barr = l_value->entry->value.boolarr.ptr;
       int bindex = array_index(l_value);
 
       barr[bindex] = value.boolean;
+    }
     default:
       break;
     }

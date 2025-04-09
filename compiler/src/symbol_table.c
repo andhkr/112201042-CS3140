@@ -91,7 +91,7 @@ symbltblentry *add_entry(symbol_table *symbtbl, char *name, datatype type,
                          datavalue value) {
   int hashvalue = symbtbl->hashvalue_of_key(name) % symbtbl->capacity;
   // for table the max lenght of variable to be printed
-  clen_for_var = (clen_for_var < strlen(name) ? (strlen(name)) : clen_for_var);
+  clen_for_var = (clen_for_var < (int)strlen(name) ? ((int)strlen(name)) : clen_for_var);
   symbltblentry *entry = NULL;
   if (!symbtbl->used[hashvalue]) {
     init_entry(&symbtbl->table[hashvalue], name, type, value);
@@ -144,7 +144,7 @@ void add_array_to_symbtbl(
     int n_ele         /* number of elements in array*/
 ) {
   switch (var->type) {
-  case INT:
+  case INT:{
     int *arr = (int *)calloc(n_ele, sizeof(int));
     var->entry->type = INTARRAY;
     intarray array;
@@ -153,7 +153,8 @@ void add_array_to_symbtbl(
     update_data(&var->entry->value.intarr, &array, sizeof(intarray));
     var->type = INTARRAY;
     break;
-  case BOOL:
+  }
+  case BOOL:{
     bool *barr = (bool *)calloc(n_ele, sizeof(bool));
     var->entry->type = BOOLARRAY;
     boolarray barray;
@@ -162,6 +163,7 @@ void add_array_to_symbtbl(
     update_data(&var->entry->value.boolarr, &barray, sizeof(boolarray));
     var->type = BOOLARRAY;
     break;
+  }
   default:
     break;
   }

@@ -39,7 +39,7 @@
 	symbltblentry* entry;
 }
 
-%token <treeNode> WRITE DECL ENDDECL T_INT T_BOOL
+%token <treeNode> WRITE DECL ENDDECL T_INT T_BOOL READ
 %token <treeNode> IF ELSE
 %token <treeNode> LOGICAL_AND LOGICAL_NOT LOGICAL_OR
 %token <treeNode> EQUALEQUAL LESSTHANOREQUAL GREATERTHANOREQUAL NOTEQUAL
@@ -51,7 +51,8 @@
 %token BEG END
 %type <treeNode> expr write_stmt assign_stmt Gdecl_list Gdecl
 %type <treeNode> ret_type Gid var_expr str_expr Glist 
-%type <treeNode> cond_stmt stmt_list statement control_stmt
+%type <treeNode> cond_stmt stmt_list statement control_stmt 
+%type <treeNode> param_list1 param_list para read_stmt
 
 %right '='
 %left LOGICAL_OR
@@ -139,7 +140,6 @@
 	stmt_list:	/* NULL */		{$$ = NULL;}
 		|	statement stmt_list	{$1->ptr_sibling = $2;
 									$$ = $1;
-									
 								}
 		|	error ';' 		{fprintf(stderr,"Error : line no: %d : Syntax Error\n",Lineno);
 							exit(EXIT_FAILURE);}
@@ -165,15 +165,37 @@
 									}
 								}
 		|   control_stmt ';' {$$ = $1;}
+
+		|   read_stmt ';' { $$ = $1;
+							if(stm_stack.sp == 0){
+								graph($1);
+							}
+						}
 		;
 
-	write_stmt:	WRITE '(' expr ')' 	{
+	write_stmt:	WRITE '(' param_list ')' 	{
 										$$ = create_node_ast(FUN_CALL,NULL,$1,$3);
 									}
 		 | WRITE '(''"' str_expr '"'')'      {;}
 		;
-	
+	read_stmt:	READ '(' param_list ')' {
+		$$ = create_node_ast(FUN_CALL,NULL,$1,$3);
+	}
+	;
 	assign_stmt:/*NULL*/ {$$=NULL;}
+	|expr '+' '+' {
+		char word[13];
+		snprintf(word,sizeof(word),"%d",1);
+		node* num = create_empty_node(word);
+		num->type = INT;
+		memset(&num->exp_value,0,sizeof(datavalue));
+		num->exp_value.integer = 1;
+		node* increment = create_node_ast(PLUS,NULL,$1,num);
+		node* dup = create_empty_node($1->label);
+		memcpy(dup,$1,sizeof(node));
+		node* check = create_node_ast(ASSIGN,NULL,dup,increment);
+		$$ = check;
+	}
 	|var_expr '=' expr  		{ 	
 											$$ = create_node_ast(ASSIGN,NULL,$1,$3);	
 										}
@@ -231,6 +253,19 @@
 		;
 	control_stmt: BREAK_Y     {$$ = $1;}
 			| CONTINUE        {$$ = $1;}
+	;
+	param_list: /*NULL*/ {$$ = NULL;}
+		|	param_list1		{$$ = $1;}
+	;
+		
+	param_list1:	para {$$ = $1;}	
+		|	para ',' param_list1	{
+			$1->ptr_sibling = $3;
+			$$ = $1;
+		}
+	;
+
+	para	:	expr			{ $$ = $1;}
 	;
 	expr	:	NUM 		{
 								char word[13];
@@ -328,6 +363,7 @@
 										node* left = create_empty_node($1->entry->name);
 										$1->ptr_children_list = left;
 										left->ptr_sibling = index;
+										index->ptr_children_list = $3;
 										$1->type = $1->entry->type;
 										$$ = $1;
 									} 
@@ -344,9 +380,20 @@ int main(int argc,char** argv){
 	push_back(&manager,symbltbl);
 	init_stmt_stack(&stm_stack);
 	wflag = 1;
+	/* printf("%d\n",argc); */
+	if(argc == 2){
+		FILE* file = fopen(argv[1],"r");
+		/* printf("file:%s\n",argv[1]); */
+		if(file == NULL){
+			fprintf(stderr,"cannot open file %s\n",argv[1]);
+			exit(EXIT_FAILURE);
+		}
+		yyin = file;
+	}
 	yyparse();
 	print_symbol_table();
 	free_symbol_table_manager(&manager);
 	free_graph();
+	yyin=NULL;
 	return 0;
 }

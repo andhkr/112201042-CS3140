@@ -4,17 +4,17 @@ datatype curr_datatype = 10;
 statements curr_statement = 0;
 /* sizeof datatypes */
 size_t datasize[] = {
-    [INT] sizeof(int),     [CHAR] sizeof(char), [DOUBLE] sizeof(double),
-    [FLOAT] sizeof(float), [BOOL] sizeof(bool),
+    [INT] = sizeof(int),     [CHAR] = sizeof(char), [DOUBLE] = sizeof(double),
+    [FLOAT] = sizeof(float), [BOOL] = sizeof(bool),
 };
 
 /* string name */
-char *typename[] = {[INT] "int",
-                    [CHAR] "char*",
-                    [STRING] "char*",
-                    [DOUBLE] "double",
-                    [FLOAT] "float",
-                    [BOOL] "boolean"
+char *typename[] = {[INT] = "int",
+                    [CHAR] = "char*",
+                    [STRING] = "char*",
+                    [DOUBLE] = "double",
+                    [FLOAT] = "float",
+                    [BOOL] = "boolean"
               };
 datavalue zero_set = {0};
 
@@ -49,7 +49,7 @@ void add_char(datavalue *d1, datavalue *d2, datavalue *result) {
 }
 
 void (*add[])(datavalue *, datavalue *, datavalue *) = {
-    [INT] add_int, [CHAR] add_char, [FLOAT] add_float, [DOUBLE] add_double};
+    [INT] = add_int, [CHAR] = add_char, [FLOAT] = add_float, [DOUBLE] = add_double};
 
 /* subtraction */
 void sub_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -73,7 +73,7 @@ void sub_char(datavalue *d1, datavalue *d2, datavalue *result) {
 }
 
 void (*sub[])(datavalue *, datavalue *, datavalue *) = {
-    [INT] sub_int, [CHAR] sub_char, [FLOAT] sub_float, [DOUBLE] sub_double};
+    [INT] = sub_int, [CHAR] = sub_char, [FLOAT] = sub_float, [DOUBLE] = sub_double};
 
 /* multiplication */
 void mul_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -97,7 +97,7 @@ void mul_char(datavalue *d1, datavalue *d2, datavalue *result) {
 }
 
 void (*mul[])(datavalue *, datavalue *, datavalue *) = {
-    [INT] mul_int, [CHAR] mul_char, [FLOAT] mul_float, [DOUBLE] mul_double};
+    [INT] = mul_int, [CHAR] = mul_char, [FLOAT] = mul_float, [DOUBLE] = mul_double};
 
 /* division */
 void div_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -121,7 +121,7 @@ void div_char(datavalue *d1, datavalue *d2, datavalue *result) {
 }
 
 void (*divide[])(datavalue *, datavalue *, datavalue *) = {
-    [INT] div_int, [CHAR] div_char, [FLOAT] div_float, [DOUBLE] div_double};
+    [INT] = div_int, [CHAR] = div_char, [FLOAT] = div_float, [DOUBLE] = div_double};
 
 /* negation */
 
@@ -146,15 +146,15 @@ void neg_char(datavalue *d1, datavalue *result) {
 }
 
 void (*neg[])(datavalue *, datavalue *) = {
-    [INT] neg_int, [CHAR] neg_char, [FLOAT] neg_float, [DOUBLE] neg_double};
+    [INT] = neg_int, [CHAR] = neg_char, [FLOAT] = neg_float, [DOUBLE] = neg_double};
 
 char *operations_name[] = {
-    [PLUS] "PLUS",      [SUB] "SUB",       [MUL] "MUL",
-    [DIV] "DIV",        [ASSIGN] "ASSIGN", [U_MINUS] "U_MINUS",
-    [GREATERTHAN] "[>]",  [LESSTHAN] "[<]",    [LESST_EQUAL] "[<=]",
-    [EQUAL_EQUAL] "[==]", [FUN_CALL] "CALL", [GREATT_EQUAL] "[>=]",
-    [LESST_EQUAL] "[<=]", [NOT_EQAUL] "[!=]",  [Logical_NOT] "[!]",
-    [Logical_AND] "[&&]", [Logical_OR] "[||]",[MODULO] "[%]"};
+    [PLUS] = "PLUS",      [SUB] = "SUB",       [MUL] = "MUL",
+    [DIV] = "DIV",        [ASSIGN] = "ASSIGN", [U_MINUS] = "U_MINUS",
+    [GREATERTHAN] = "[>]",  [LESSTHAN] = "[<]",
+    [EQUAL_EQUAL] = "[==]", [FUN_CALL] = "CALL", [GREATT_EQUAL] = "[>=]",
+    [LESST_EQUAL] = "[<=]", [NOT_EQAUL] = "[!=]",  [Logical_NOT] = "[!]",
+    [Logical_AND] = "[&&]", [Logical_OR] = "[||]",[MODULO] = "[%]"};
 
 /*less than*/
 void lessthan_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -179,10 +179,10 @@ void lessthan_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* lessthanision function pointers */
 void (*lessthanops[])(datavalue *, datavalue *,
-                      datavalue *) = {[INT] lessthan_int,
-                                      [CHAR] lessthan_char,
-                                      [FLOAT] lessthan_float,
-                                      [DOUBLE] lessthan_double};
+                      datavalue *) = {[INT] = lessthan_int,
+                                      [CHAR] = lessthan_char,
+                                      [FLOAT] = lessthan_float,
+                                      [DOUBLE] = lessthan_double};
 
 /*greaterthan than*/
 void greaterthan_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -207,10 +207,10 @@ void greaterthan_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* greaterthanision function pointers */
 void (*greaterthanops[])(datavalue *, datavalue *,
-                         datavalue *) = {[INT] greaterthan_int,
-                                         [CHAR] greaterthan_char,
-                                         [FLOAT] greaterthan_float,
-                                         [DOUBLE] greaterthan_double};
+                         datavalue *) = {[INT] = greaterthan_int,
+                                         [CHAR] = greaterthan_char,
+                                         [FLOAT] = greaterthan_float,
+                                         [DOUBLE] = greaterthan_double};
 
 /*greaterthaneq than*/
 void greatteq_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -235,10 +235,10 @@ void greatteq_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* greatteqision function pointers */
 void (*greatteqops[])(datavalue *, datavalue *,
-                      datavalue *) = {[INT] greatteq_int,
-                                      [CHAR] greatteq_char,
-                                      [FLOAT] greatteq_float,
-                                      [DOUBLE] greatteq_double};
+                      datavalue *) = {[INT] = greatteq_int,
+                                      [CHAR] = greatteq_char,
+                                      [FLOAT] = greatteq_float,
+                                      [DOUBLE] = greatteq_double};
 
 /*lessthaneq than*/
 void lessteq_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -263,10 +263,10 @@ void lessteq_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* lessteqision function pointers */
 void (*lessteqops[])(datavalue *, datavalue *,
-                     datavalue *) = {[INT] lessteq_int,
-                                     [CHAR] lessteq_char,
-                                     [FLOAT] lessteq_float,
-                                     [DOUBLE] lessteq_double};
+                     datavalue *) = {[INT] = lessteq_int,
+                                     [CHAR] = lessteq_char,
+                                     [FLOAT] = lessteq_float,
+                                     [DOUBLE] = lessteq_double};
 
 /*noteq than*/
 void noteq_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -291,10 +291,10 @@ void noteq_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* noteqision function pointers */
 void (*noteqops[])(datavalue *, datavalue *,
-                   datavalue *) = {[INT] noteq_int,
-                                   [CHAR] noteq_char,
-                                   [FLOAT] noteq_float,
-                                   [DOUBLE] noteq_double};
+                   datavalue *) = {[INT] = noteq_int,
+                                   [CHAR] = noteq_char,
+                                   [FLOAT] = noteq_float,
+                                   [DOUBLE] = noteq_double};
 
 /*iseq than*/
 void isequal_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -319,10 +319,10 @@ void isequal_char(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* isequalision function pointers */
 void (*isequalops[])(datavalue *, datavalue *,
-                     datavalue *) = {[INT] isequal_int,
-                                     [CHAR] isequal_char,
-                                     [FLOAT] isequal_float,
-                                     [DOUBLE] isequal_double};
+                     datavalue *) = {[INT]  = isequal_int,
+                                     [CHAR]  = isequal_char,
+                                     [FLOAT]  = isequal_float,
+                                     [DOUBLE]  = isequal_double};
 
 /*not than*/
 void logNot_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -348,15 +348,16 @@ void logNot_char(datavalue *d1, datavalue *d2, datavalue *result) {
 void logNot_bool(datavalue *d1, datavalue *d2, datavalue *result) {
   bool final = !(d1->boolean);
   update_data(result, &final, sizeof(bool));
+  final = !(d2);
 }
 
 /* logNotision function pointers */
 void (*logNotops[])(datavalue *, datavalue *,
-                    datavalue *) = {[INT] logNot_int,
-                                    [CHAR] logNot_char,
-                                    [FLOAT] logNot_float,
-                                    [DOUBLE] logNot_double,
-                                    [BOOL] logNot_bool};
+                    datavalue *) = {[INT] = logNot_int,
+                                    [CHAR] = logNot_char,
+                                    [FLOAT] = logNot_float,
+                                    [DOUBLE] = logNot_double,
+                                    [BOOL] = logNot_bool};
 
 /*and than*/
 void logAnd_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -386,11 +387,11 @@ void logAnd_bool(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* logAndision function pointers */
 void (*logAndops[])(datavalue *, datavalue *,
-                    datavalue *) = {[INT] logAnd_int,
-                                    [CHAR] logAnd_char,
-                                    [FLOAT] logAnd_float,
-                                    [DOUBLE] logAnd_double,
-                                    [BOOL] logAnd_bool};
+                    datavalue *) = {[INT] = logAnd_int,
+                                    [CHAR] = logAnd_char,
+                                    [FLOAT] = logAnd_float,
+                                    [DOUBLE] = logAnd_double,
+                                    [BOOL] = logAnd_bool};
 
 /*or than*/
 void logOr_double(datavalue *d1, datavalue *d2, datavalue *result) {
@@ -420,8 +421,8 @@ void logOr_bool(datavalue *d1, datavalue *d2, datavalue *result) {
 
 /* logOrision function pointers */
 void (*logOrops[])(datavalue *, datavalue *,
-                   datavalue *) = {[INT] logOr_int,
-                                   [CHAR] logOr_char,
-                                   [FLOAT] logOr_float,
-                                   [DOUBLE] logOr_double,
-                                   [BOOL] logOr_bool};
+                   datavalue *) = {[INT] = logOr_int,
+                                   [CHAR] = logOr_char,
+                                   [FLOAT] = logOr_float,
+                                   [DOUBLE] = logOr_double,
+                                   [BOOL] = logOr_bool};

@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -I.
+CFLAGS = -std=c99 -g -Wall -Wextra -Werror -Wpedantic -pedantic-errors -D_POSIX_C_SOURCE=200809L -Wno-error=unused-function -Wno-error=unused-parameter -I.
 
 SRC=src
 INCLUDE=include
