@@ -319,7 +319,9 @@ int vmar = 3; /* distance of graph lines */
 int graph(node *root) {
   int rte = 0, rtm = 0;
   init_graph(root);
+  // fprintf(assembly_file,"/*");
   print_tree(root, 0, 0, &rte, &rtm);
+  // fprintf(assembly_file,"*/");
   graphFinish();
   return 0;
 }

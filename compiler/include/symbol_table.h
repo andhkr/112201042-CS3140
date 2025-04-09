@@ -11,6 +11,7 @@ extern int clen_for_var;
 extern int clen_for_type;
 extern int clen_for_val;
 extern int row;
+extern FILE* assembly_file;
 
 /*helper function for hashing*/
 bool is_prime(long n);

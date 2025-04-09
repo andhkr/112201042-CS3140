@@ -27,9 +27,13 @@
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
+	FILE* assembly_file = NULL;
+	char* file_sil = NULL;
 	extern int wflag;
 	int i;
 	#define YYERROR_VERBOSE
+	extern bool first_var_decl;
+	#include "include/machine_code_generator.h"
 %}
 
 %union{
@@ -80,7 +84,13 @@
 										$1->ptr_sibling = $2;
 										node* dec = create_empty_node("DECL");
 										dec->ptr_children_list = $1;
-										graph(dec);										
+										graph(dec);	
+										if(first_var_decl){
+											first_var_decl = false;
+											first_decl(dec);
+										}else{
+											global_decl(dec);
+										}						
 									}
 		;
 		
@@ -156,6 +166,7 @@
 									$$ = $1;
 									if(stm_stack.sp == 0){
 										graph($1);
+										for_write($1);
 									}
 								}
 		|	cond_stmt 			{
@@ -169,6 +180,7 @@
 		|   read_stmt ';' { $$ = $1;
 							if(stm_stack.sp == 0){
 								graph($1);
+								for_read($1);
 							}
 						}
 		;
@@ -380,6 +392,7 @@ int main(int argc,char** argv){
 	push_back(&manager,symbltbl);
 	init_stmt_stack(&stm_stack);
 	wflag = 1;
+	char* filepath = NULL;
 	/* printf("%d\n",argc); */
 	if(argc == 2){
 		FILE* file = fopen(argv[1],"r");
@@ -388,7 +401,33 @@ int main(int argc,char** argv){
 			fprintf(stderr,"cannot open file %s\n",argv[1]);
 			exit(EXIT_FAILURE);
 		}
+
 		yyin = file;
+		size_t len = strlen(argv[1]);
+		int i = 0;
+		for(i = len-1;i>=0;--i){
+			if(argv[1][i]=='.') break;
+		}
+
+		file_sil = file_stem(argv[1]);
+		filepath = (char*) malloc(sizeof(char)*(i+3));
+
+		assert(filepath!=NULL);
+
+		for(int j = 0;j<i;++j){
+			filepath[j]=argv[1][j];
+		}
+
+		filepath[i]='.';
+		filepath[i+1]='s';
+		filepath[i+2]='\0';
+
+		printf("%s\n",filepath);
+		assembly_file = fopen(filepath,"w");
+		if(!assembly_file){
+			perror("fopen");
+			return EXIT_FAILURE;
+		}		
 	}
 	yyparse();
 	print_symbol_table();
@@ -397,3 +436,4 @@ int main(int argc,char** argv){
 	yyin=NULL;
 	return 0;
 }
+

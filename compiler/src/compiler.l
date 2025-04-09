@@ -22,6 +22,8 @@ int     wflag;
 #include "include/stack.h"
 #include "y.tab.h"
 #include <stdbool.h>
+#include "include/machine_code_generator.h"
+bool first_var_decl;
 %}
 
 %option noyywrap
@@ -53,6 +55,8 @@ boolean			{
 
 (decl|begindecl) {
 					wflag = 1;
+					first_var_decl = true;
+					insert_top();
 					yylval.treeNode = NULL;
 					return DECL;
 				}
@@ -61,8 +65,13 @@ enddecl			{
 					wflag = 0;
 					return ENDDECL;
 				}
-begin           { return BEG;}
-end             { return END;}
+begin           {
+					insert_main();
+	 				return BEG;}
+end             { 
+					insert_end();
+					return END;
+				}
 true           {	yylval.b_var = true;
 					return T;
 				}
