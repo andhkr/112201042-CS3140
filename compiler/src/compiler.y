@@ -23,7 +23,7 @@
 	#include <string.h>
 	#include <stdbool.h>
 	#include "include/stack.h"
-	#include "include/interpreter.h"
+	// #include "include/interpreter.h"
 	int yylex();
 	void yyerror( char* );
 	extern FILE* yyin;
@@ -159,6 +159,7 @@
 									$$ = $1;
 									if(stm_stack.sp == 0){
 										graph($1);
+										solve_assign_ins($1);
 									}
 								
 								}
@@ -220,7 +221,8 @@
 												cond->ptr_sibling = body;
 												body->ptr_children_list = $4;
 												if(stm_stack.sp == 0){
-													interprete($1);
+													// interprete($1);
+													if_statement($1);
 												}
 												$$ = $1;
 										}
@@ -238,7 +240,9 @@
 																$5->ptr_children_list = else_body;
 																else_body->ptr_children_list = $6;
 																if(stm_stack.sp == 0){
-																	interprete($1);
+																	// interprete($1);
+																	branch_stmt(branch);
+																	// graph($1);
 																}
 																$$ = branch;
 															}
@@ -258,7 +262,8 @@
 																						iterate->ptr_sibling = body;
 																						body->ptr_children_list = $10;
 																						if(stm_stack.sp == 0){
-																							interprete($1);
+																							// interprete($1);
+																							for_statement($1);
 																						}
 																						$$ = $1;
 		                                                							}

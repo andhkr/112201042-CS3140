@@ -1,0 +1,122 @@
+7
+/home/induman/Academic/semester6/compiler/lab/lab4/testcase/sample4.s
+
+             DECL
+               |
+     |-------------|
+     v             v
+  integer  array declaration
+                   |
+             |----|-
+             v    v
+           array  5
+
+          DECL
+           |
+     |------------|
+     v      v     v
+  integer  key  found
+
+       DECL
+         |
+     |-------|
+     v       v
+  integer  index
+
+                       CALL
+                         |
+    |---------|---------------------------|
+    v         v             v             v
+  read   ArrayAccess   ArrayAccess   ArrayAccess
+              |             |             |
+          |------|      |------|      |------|
+          v      v      v      v      v      v
+        array  index  array  index  array  index
+                 |             |             |
+               |--           |--           |--
+               v             v             v
+               0             1             2
+
+                CALL
+                  |
+    |---------|-------------|
+    v         v             v
+  read   ArrayAccess   ArrayAccess
+              |             |
+          |------|      |------|
+          v      v      v      v
+        array  index  array  index
+                 |             |
+               |--           |--
+               v             v
+               3             4
+
+     CALL
+      |
+    |----|
+    v    v
+  read  key
+
+   ASSIGN
+      |
+    |----|
+    v    v
+  found  0
+
+                                   for
+                                    |
+       |-----------|-------------|----------------------|
+       v           v             v                      v
+  assign_stmt  condition      iterator                 body
+       |           |             |                      |
+      |-           |             |                      |
+      v            v             v                      v
+   ASSIGN         [<]          ASSIGN                   if
+      |            |             |                      |
+    |----|       |----|     |--------|             |--------------|
+    v    v       v    v     v        v             v              v
+  index  0     index  4   index    PLUS       if_condition     if_body
+                                     |             |              |
+                                   |----|          |              |
+                                   v    v          v              v
+                                 index  1         [==]         ASSIGN
+                                                   |              |
+                                                 |--------|     |----|
+                                                 v        v     v    v
+                                            ArrayAccess  key  found  1
+                                                 |
+                                             |------|
+                                             v      v
+                                           array  index
+                                                    |
+                                                    |
+                                                    v
+                                                  index
+
+                branch
+                  |
+             |----------------|
+             v                v
+            if               else
+             |                |
+        |-----------|         |
+        v           v         v
+  if_condition   if_body  else_body
+        |           |         |
+      |--           |         |
+      v             v         v
+    [==]          CALL      CALL
+      |             |         |
+    |----|        |----|    |----|
+    v    v        v    v    v    v
+  found  1      write  1  write  0
+
+Symbol Table:
++------------+------------+------------+
+| variable   | type       | value      |
++------------+------------+------------+
+| key        | int        | 0          |
+| index      | int        | 0          |
+| found      | int        | 0          |
+| array      | int array  | 0 , 0 , 0 , 0 , 0 , |
++------------+------------+------------+

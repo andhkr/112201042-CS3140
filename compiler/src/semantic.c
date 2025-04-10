@@ -139,21 +139,21 @@ void Div(node *new_node, node *left, node *right) {
   int l_type = 0,r_type = 0;
   l_type = give_type(left);
   r_type = give_type(right);
-  if (is_zero(&right->exp_value)) {
-    fprintf(stderr, "error:line no %d : divison by zero\n",Lineno);
-    exit(EXIT_FAILURE);
-  }
+  // if (is_zero(&right->exp_value)) {
+  //   fprintf(stderr, "error:line no %d : divison by zero\n",Lineno);
+  //   exit(EXIT_FAILURE);
+  // }
   if (l_type  == DOUBLE || r_type == DOUBLE) {
-    divide[DOUBLE](&left->exp_value, &right->exp_value, &new_node->exp_value);
+    // divide[DOUBLE](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = DOUBLE;
   } else if (l_type  == FLOAT || r_type == FLOAT) {
-    divide[FLOAT](&left->exp_value, &right->exp_value, &new_node->exp_value);
+    // divide[FLOAT](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = FLOAT;
   } else if (l_type  == INT || r_type == INT) {
-    divide[INT](&left->exp_value, &right->exp_value, &new_node->exp_value);
+    // divide[INT](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = INT;
   } else if (l_type  == CHAR && r_type == CHAR) {
-    divide[CHAR](&left->exp_value, &right->exp_value, &new_node->exp_value);
+    // divide[CHAR](&left->exp_value, &right->exp_value, &new_node->exp_value);
     new_node->type = CHAR;
   } else {
     fprintf(stderr,

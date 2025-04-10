@@ -35,4 +35,14 @@ void insert_top();
 void insert_main();
 
 void insert_end();
+
+void solve_expr_ins(node *tree_node);
+
+void solve_assign_ins(node*);
+
+void for_statement(node* root);
+
+void if_statement(node* root);
+
+void branch_stmt(node* root);
 #endif
