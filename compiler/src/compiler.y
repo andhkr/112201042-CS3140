@@ -406,7 +406,7 @@ int main(int argc,char** argv){
 			fprintf(stderr,"cannot open file %s\n",argv[1]);
 			exit(EXIT_FAILURE);
 		}
-
+		printf("%s\n",argv[0]);
 		yyin = file;
 		size_t len = strlen(argv[1]);
 		int i = 0;
@@ -415,17 +415,19 @@ int main(int argc,char** argv){
 		}
 
 		file_sil = file_stem(argv[1]);
-		filepath = (char*) malloc(sizeof(char)*(i+3));
-
+		filepath = (char*) malloc(sizeof(char)*(strlen(file_sil)+3));
 		assert(filepath!=NULL);
 
-		for(int j = 0;j<i;++j){
-			filepath[j]=argv[1][j];
-		}
+		filepath[0]='.';
+		filepath[1]='/';
 
-		filepath[i]='.';
-		filepath[i+1]='s';
-		filepath[i+2]='\0';
+		int j = 0;
+		for(;j<(int)strlen(file_sil)-1;++j){
+			filepath[j+2]=file_sil[j];
+		}
+		j = j+2;
+		filepath[j++]='s';
+		filepath[j]='\0';
 
 		printf("%s\n",filepath);
 		assembly_file = fopen(filepath,"w");

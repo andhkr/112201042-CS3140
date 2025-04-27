@@ -43,7 +43,7 @@ char* file_stem(const char* str){
 	char* file = (char*) malloc(sizeof(char)*((d-i)+3));
 
     
-    printf("%d\n",(d-i));
+    // printf("%d\n",(d-i));
 	int j = 0;
 	for(;i<=d;++i){
 		file[j++]=str[i];
